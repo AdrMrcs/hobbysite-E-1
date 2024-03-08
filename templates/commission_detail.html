@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Comments</h1>
+  <ul>
+    {% for comment in object.comments.all %}
+      <li>
+        <p>{{ comment.entry }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
