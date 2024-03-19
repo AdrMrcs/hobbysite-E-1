@@ -10,7 +10,7 @@ def index(request):
     return HttpResponse("hobby site")
 
 class BlogListView(ListView):
-    model = Article
+    model = ArticleCategory
     template_name = 'article_list.html'
 
 class BlogDetailView(DetailView):
