@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Article Detail{% endblock %}
+{% block content %}
+  <p>{{ object }}</p>
+  <a href="/wiki/articles">
+    <h2>Go back to article list</h2>
+  </a>
+{% endblock %}
