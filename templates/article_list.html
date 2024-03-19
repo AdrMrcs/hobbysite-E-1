@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block header %}Blog{% endblock %}
+{% block header %}Blog Articles{% endblock %}
 {% block title %}Blog{% endblock %}
 {% block content %}
-<h1>Table of Contents</h1>
-  <ul>
-    {% for article in object_list %}
-      <li>   
-        <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+  {% for articlecategory in object_list %}
+    <h2>{{ articlecategory.name }}</h2>
+    <p>{{ articlecategory.description }}</p>
+    <ul>
+      {% for article in articlecategory.article.all %}
+        <li>   
+          <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
 {% endblock %}

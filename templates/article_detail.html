@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block header %}Blog Articles{% endblock %}
+{% block title %}Blog Detail{% endblock %}
 {% block content %}
     <h2>{{article.title}}</h2>
     <p>{{article.entry}}</p>
