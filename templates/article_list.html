@@ -4,10 +4,11 @@
 {% block header %}Blog{% endblock %}
 {% block title %}Blog{% endblock %}
 {% block content %}
+<h1>Table of Contents</h1>
   <ul>
-    {% for recipe in object_list %}
+    {% for article in object_list %}
       <li>   
-        <a href="{{ article.get_absolute_url }}">{{ recipe.name }}</a>
+        <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
       </li>
     {% endfor %}
   </ul>
