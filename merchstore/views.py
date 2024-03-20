@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
-from .models import ProductType
+from .models import ProductType, Product
 
 # Create your views here.
 
@@ -12,5 +12,5 @@ class ProductListView (ListView):
     template_name = 'product_list.html'
 
 class ProductDetailView (DetailView):
-    model = ProductType
+    model = Product
     template_name = 'product_detail.html'
