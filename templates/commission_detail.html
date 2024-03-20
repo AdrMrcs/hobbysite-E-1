@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Commission Details{% endblock %}
 {% block content %}
-  <h1>Comments</h1>
+  <h2>{{object.title}} comments</h2>
   <ul>
     {% for comment in object.comments.all %}
       <li>
@@ -10,4 +11,5 @@
       </li>
     {% endfor %}
   </ul>
+  <a href="{% url 'commissions:commission-list' %}">Return to Commission List</a>
 {% endblock %}
