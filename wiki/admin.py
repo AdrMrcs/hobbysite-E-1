@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import Article, ArticleCategory
 
+
 class Inline(admin.TabularInline):
     model = Article
 

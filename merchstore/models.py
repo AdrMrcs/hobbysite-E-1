@@ -1,9 +1,8 @@
 from django.db import models
 from django.urls import reverse
 
-# Create your models here.
 
-class ProductType (models.Model):
+class ProductType(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
 
@@ -13,7 +12,7 @@ class ProductType (models.Model):
     class Meta:
         ordering = ['name', ]
 
-class Product (models.Model):
+class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -25,7 +24,7 @@ class Product (models.Model):
         related_name = 'products'
     )
 
-    def _str__ (self):
+    def _str__(self):
         return self.name
 
     def get_absolute_url(self):

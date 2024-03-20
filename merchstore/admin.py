@@ -1,13 +1,12 @@
 from django.contrib import admin
 from merchstore.models import *
 
-# Register your models here.
 
-class ProductInline (admin.TabularInline):
+class ProductInline(admin.TabularInline):
     model = Product
     fields = ['name', 'description', 'price', 'producttype', ]
 
-class ProductTypeAdmin (admin.ModelAdmin):
+class ProductTypeAdmin(admin.ModelAdmin):
     model = ProductType
 
     search_fields = ('name', )
@@ -16,7 +15,7 @@ class ProductTypeAdmin (admin.ModelAdmin):
 
     inlines = [ProductInline, ]
 
-class ProductAdmin (admin.ModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
     model = Product
 
     list_display = ('name', 'description', 'price', 'producttype')

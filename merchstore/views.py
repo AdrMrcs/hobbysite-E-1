@@ -5,7 +5,6 @@ from django.views.generic.detail import DetailView
 
 from .models import ProductType, Product
 
-# Create your views here.
 
 class ProductListView (ListView):
     model = ProductType
