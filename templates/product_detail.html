@@ -2,17 +2,85 @@
 {% load static %}
 
 {% block content %}
+    <style>
+        body {
+        margin: 0;
+        background-color: #183a54;
+        }
+        .header {
+        margin: 0;
+        padding: 10pt;
+        background: #3685c2;
+        color: black;
+        box-shadow: 0px 5px 40px black;
+        }
+        .content {
+        width: 60%;
+        padding-top: 25px;
+        margin: auto;
+        color: white;
+        }
+        h1 {
+        text-align: center;
+        font-size: 50pt;
+        font-family: 'trebuchet ms';
+        font-weight: 900;
+        }
+        h2 {
+        font-family: 'arial';
+        font-size: 35pt;
+        font-weight: 900;
+        }
+        h3 {
+        text-align: center;
+        font-family: 'arial';
+        font-weight: 100;
+        font-size: 10pt;
+        padding: 30pt;
+        }
+        li {
+        list-style-type: none;
+        font-family: 'arial';
+        font-weight: 100;
+        color: #ababab;
+        margin: 20px 25px;
+        }
+        a {
+        text-decoration: none;
+        color: white;
+        }
+        a:hover{
+        background-color: #3685c2;
+        border-radius: 5pt;
+        padding: 5pt;
+        color: black;
+        }
+        .productname {
+        font-size: 25pt;
+        color: white;
+        }
+    </style>
 
-    <h1>Merchandise Store</h1>
-    <h2>{{object.name}}</h2>
+    <div class="header">
+        <h1>Merchandise Store</h1>
+    </div>
 
-    <ul>
-        {% for product in object.products.all %}
-            <li>{{product.name}}, {{product.description}}, {{product.price}}</li>
-        {% endfor %}
-    </ul>
-
-    <h3><a href="/merchstore/items">Go back to product list</a></h3>
+    <div class="content">
+        <h2>{{object.name}}</h2>
+        <ul>
+            {% for product in object.products.all %}
+                <li><span class="productname">{{product.name}}</span> 
+                    <ul>
+                        <li>Price: {{product.price}}</li>
+                        <li>
+                            Description: {{product.description}}
+                        </li>
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+        <h3><a href="/merchstore/items">Go back to product list</a></h3>
+    </div>
     
 
 {% endblock %}
