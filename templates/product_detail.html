@@ -5,20 +5,20 @@
     <style>
         body {
         margin: 0;
-        background-color: #183a54;
+        background-color: beige;
         }
         .header {
         margin: 0;
         padding: 10pt;
-        background: #3685c2;
-        color: black;
-        box-shadow: 0px 5px 40px black;
+        background: #6e7a4c;
+        color: beige;
+        box-shadow: 0px 5px 50px #808080;
         }
         .content {
         width: 60%;
         padding-top: 25px;
         margin: auto;
-        color: white;
+        color: #836443;
         }
         h1 {
         text-align: center;
@@ -42,22 +42,22 @@
         list-style-type: none;
         font-family: 'arial';
         font-weight: 100;
-        color: #ababab;
+        color: #898888;
         margin: 20px 25px;
         }
         a {
         text-decoration: none;
-        color: white;
+        color: #836443;
         }
         a:hover{
-        background-color: #3685c2;
+        background-color: #6e7a4c;
         border-radius: 5pt;
         padding: 5pt;
-        color: black;
+        color: beige;
         }
         .productname {
         font-size: 25pt;
-        color: white;
+        color: #614a32;
         }
     </style>
 
@@ -71,7 +71,7 @@
             {% for product in object.products.all %}
                 <li><span class="productname">{{product.name}}</span> 
                     <ul>
-                        <li>Price: {{product.price}}</li>
+                        <li>Price: PHP {{product.price}}</li>
                         <li>
                             Description: {{product.description}}
                         </li>
@@ -82,5 +82,4 @@
         <h3><a href="/merchstore/items">Go back to product list</a></h3>
     </div>
     
-
 {% endblock %}
