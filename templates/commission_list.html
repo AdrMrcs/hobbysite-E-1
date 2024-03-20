@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Commission List{% endblock %}
 {% block content %}
   <h1>Commissions</h1>
   <ul>
     {% for commission in object_list %}
       <li>
-        <a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a>
+        <h2><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h2>
       </li>
     {% endfor %}
   </ul>
