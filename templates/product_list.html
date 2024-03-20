@@ -15,7 +15,7 @@
         box-shadow: 0px 5px 50px #808080;
         }
         .content {
-        width: 60%;
+        width: 50%;
         padding-top: 25px;
         margin: auto;
         color: #836443;
@@ -69,11 +69,13 @@
         <h2>Product Types</h2>
         <ul>
             {% for type in object_list %}
-                <li><a href="{{type.get_absolute_url}}" class="productname">{{type.name}}</a>
+                <li><span class="productname">{{type.name}}</span> {{type.description}}
                     <ul>
-                        <li>
-                            Description: {{type.description}}
-                        </li>
+                        {% for product in type.products.all %}
+                            <li> 
+                                <a href="{{product.get_absolute_url}}">{{product.name}}</a>
+                            </li>
+                        {% endfor %}
                     </ul>
                 </li>
             {% endfor %}

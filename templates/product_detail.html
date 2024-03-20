@@ -15,7 +15,7 @@
         box-shadow: 0px 5px 50px #808080;
         }
         .content {
-        width: 60%;
+        width: 50%;
         padding-top: 25px;
         margin: auto;
         color: #836443;
@@ -56,7 +56,7 @@
         color: beige;
         }
         .productname {
-        font-size: 25pt;
+        font-size: 20pt;
         color: #614a32;
         }
     </style>
@@ -68,18 +68,15 @@
     <div class="content">
         <h2>{{object.name}}</h2>
         <ul>
-            {% for product in object.products.all %}
-                <li><span class="productname">{{product.name}}</span> 
-                    <ul>
-                        <li>Price: PHP {{product.price}}</li>
-                        <li>
-                            Description: {{product.description}}
-                        </li>
-                    </ul>
-                </li>
-            {% endfor %}
+            <li>Type: <span class="productname">{{object.producttype.name}}</span></li>
+                <ul>
+                    <li>Price: PHP {{object.price}}</li>
+                    <li>
+                        Description: {{object.description}}
+                    </li>
+                </ul>
         </ul>
-        <h3><a href="/merchstore/items">Go back to product list</a></h3>
     </div>
+    <h3><a href="/merchstore/items">Go back to product list</a></h3>
     
 {% endblock %}

@@ -10,9 +10,6 @@ class ProductType (models.Model):
     def __str__ (self):
         return self.name
     
-    def get_absolute_url(self):
-        return reverse('merchstore:product-detail', args=[self.pk])
-    
     class Meta:
         ordering = ['name', ]
 
@@ -30,6 +27,9 @@ class Product (models.Model):
 
     def _str__ (self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('merchstore:product-detail', args=[self.pk])
 
     class Meta:
         ordering = ['name', ]
