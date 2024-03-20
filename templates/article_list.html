@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block header %}Blog Articles{% endblock %}
 {% block title %}Blog{% endblock %}
 {% block content %}
+<a href="{% url 'blog:article-list' %}"><h1>Blog List</h1></a>
   {% for articlecategory in object_list %}
     <h2>{{ articlecategory.name }}</h2>
     <p>{{ articlecategory.description }}</p>
@@ -15,4 +15,4 @@
       {% endfor %}
     </ul>
   {% endfor %}
-{% endblock %}
+{% endblock %}  
