@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("wiki.urls", namespace="wiki")),
     path('commissions/', include("commissions.urls", namespace="commissions")),
-    path('blog/', include("blog.urls", namespace= "blog")),
+    path('blog/', include("blog.urls", namespace="blog")),
 ]
