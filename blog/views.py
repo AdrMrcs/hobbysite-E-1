@@ -6,9 +6,6 @@ from django.views.generic.detail import DetailView
 from .models import Article, ArticleCategory
 
 
-def index(request):
-    return HttpResponse("hobby site")
-
 class BlogListView(ListView):
     model = ArticleCategory
     template_name = 'article_list.html'

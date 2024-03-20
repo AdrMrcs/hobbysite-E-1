@@ -32,8 +32,5 @@ class Comment(models.Model):
     def __str__(self):
         return f'Comment on {self.commission.title}. PK={self.pk}'
 
-    # def get_absolute_url(self):
-    #     return reverse('commissions:commission-detail', args=[self.pk])
-
     class Meta:
         ordering = ['-created_on']

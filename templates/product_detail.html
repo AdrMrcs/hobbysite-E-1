@@ -2,81 +2,81 @@
 {% load static %}
 
 {% block content %}
-    <style>
-        body {
-        margin: 0;
-        background-color: beige;
-        }
-        .header {
-        margin: 0;
-        padding: 10pt;
-        background: #6e7a4c;
-        color: beige;
-        box-shadow: 0px 5px 50px #808080;
-        }
-        .content {
-        width: 50%;
-        padding-top: 25px;
-        margin: auto;
-        color: #836443;
-        }
-        h1 {
-        text-align: center;
-        font-size: 50pt;
-        font-family: 'trebuchet ms';
-        font-weight: 900;
-        }
-        h2 {
-        font-family: 'arial';
-        font-size: 35pt;
-        font-weight: 900;
-        }
-        h3 {
-        text-align: center;
-        font-family: 'arial';
-        font-weight: 100;
-        font-size: 10pt;
-        padding: 30pt;
-        }
-        li {
-        list-style-type: none;
-        font-family: 'arial';
-        font-weight: 100;
-        color: #898888;
-        margin: 20px 25px;
-        }
-        a {
-        text-decoration: none;
-        color: #836443;
-        }
-        a:hover{
-        background-color: #6e7a4c;
-        border-radius: 5pt;
-        padding: 5pt;
-        color: beige;
-        }
-        .productname {
-        font-size: 20pt;
-        color: #614a32;
-        }
-    </style>
+  <style>
+    body {
+    margin: 0;
+    background-color: beige;
+    }
+    .header {
+    margin: 0;
+    padding: 10pt;
+    background: #6e7a4c;
+    color: beige;
+    box-shadow: 0px 5px 50px #808080;
+    }
+    .content {
+    width: 50%;
+    padding-top: 25px;
+    margin: auto;
+    color: #836443;
+    }
+    h1 {
+    text-align: center;
+    font-size: 50pt;
+    font-family: 'trebuchet ms';
+    font-weight: 900;
+    }
+    h2 {
+    font-family: 'arial';
+    font-size: 35pt;
+    font-weight: 900;
+    }
+    h3 {
+    text-align: center;
+    font-family: 'arial';
+    font-weight: 100;
+    font-size: 10pt;
+    padding: 30pt;
+    }
+    li {
+    list-style-type: none;
+    font-family: 'arial';
+    font-weight: 100;
+    color: #898888;
+    margin: 20px 25px;
+    }
+    a {
+    text-decoration: none;
+    color: #836443;
+    }
+    a:hover{
+    background-color: #6e7a4c;
+    border-radius: 5pt;
+    padding: 5pt;
+    color: beige;
+    }
+    .productname {
+    font-size: 20pt;
+    color: #614a32;
+    }
+  </style>
 
-    <div class="header">
-        <h1>Merchandise Store</h1>
-    </div>
+  <div class="header">
+    <h1>Merchandise Store</h1>
+  </div>
 
-    <div class="content">
-        <h2>{{object.name}}</h2>
+  <div class="content">
+    <h2>{{object.name}}</h2>
+    <ul>
+      <li>Type: <span class="productname">{{object.producttype.name}}</span></li>
         <ul>
-            <li>Type: <span class="productname">{{object.producttype.name}}</span></li>
-                <ul>
-                    <li>Price: PHP {{object.price}}</li>
-                    <li>
-                        Description: {{object.description}}
-                    </li>
-                </ul>
+          <li>Price: PHP {{object.price}}</li>
+          <li>
+            Description: {{object.description}}
+          </li>
         </ul>
-    </div>
-    <h3><a href="/merchstore/items">Go back to product list</a></h3>
-    
+    </ul>
+  </div>
+  <h3><a href="/merchstore/items">Go back to product list</a></h3>
+  
 {% endblock %}
