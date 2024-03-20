@@ -11,7 +11,7 @@ class ArticleCategory(models.Model):
     class Meta:
         ordering = ['name']
 
-class Articles(models.Model):
+class Article(models.Model):
     title = models.CharField(max_length=255)
     category = models.ForeignKey('ArticleCategory',
         on_delete = models.SET_NULL,

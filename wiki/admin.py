@@ -1,16 +1,16 @@
 from django.contrib import admin
 
-from .models import Articles, ArticleCategory
+from .models import Article, ArticleCategory
 
 class Inline(admin.TabularInline):
-    model = Articles
+    model = Article
 
 class ArticleCategoryAdmin(admin.ModelAdmin):
     model = ArticleCategory
     inlines = [Inline,]
 
-class ArticlesAdmin(admin.ModelAdmin):
-    model = Articles
+class ArticleAdmin(admin.ModelAdmin):
+    model = Article
 
-admin.site.register(Articles, ArticlesAdmin)
+admin.site.register(Article, ArticleAdmin)
 admin.site.register(ArticleCategory, ArticleCategoryAdmin)
