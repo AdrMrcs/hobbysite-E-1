@@ -13,6 +13,19 @@
     <a href="{% url 'commissions:commission-list' %}">Commissions</a>
     <a href="{% url 'merchstore:product-list' %}">Merchstore</a>
     <a href="{% url 'wiki:article_list' %}">Wiki</a>
+
+    <!-- LOGIN/LOGOUT BUTTON, WILL FIX FORMAT -->
+    {% if request.user.is_authenticated %}
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+      </form>
+    {% else %}
+      <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Login</button>
+      </form>
+    {% endif %}
   </nav>
   <div id="content">
     {% block content %}{% endblock %}
