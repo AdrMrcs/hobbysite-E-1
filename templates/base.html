@@ -8,10 +8,11 @@
 </head>
 <body>
   <nav>
+    <a href="{% url 'homepage:homepage' %}">Home</a>
     <a href="{% url 'blog:article-list' %}">Blog</a>
-    <a href="{% url 'blog:article-list' %}">Commissions</a>
-    <a href="{% url 'blog:article-list' %}">Merchstore</a>
-    <a href="{% url 'blog:article-list' %}">Wiki</a>
+    <a href="{% url 'commissions:commission-list' %}">Commissions</a>
+    <a href="{% url 'merchstore:product-list' %}">Merchstore</a>
+    <a href="{% url 'wiki:article_list' %}">Wiki</a>
   </nav>
   <div id="content">
     {% block content %}{% endblock %}
