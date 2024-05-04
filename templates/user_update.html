@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block header %}Create Profile{% endblock %}
+{% block title %}Create Profile{% endblock %}
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_div }}
+<button type="submit">Update</button>
+{% endblock content %}
