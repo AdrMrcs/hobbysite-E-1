@@ -44,7 +44,7 @@ class Article(models.Model):
     class Meta:
         ordering = ['-created_on']
 
-class Comment(models.model):
+class Comment(models.Model):
     author = models.ForeignKey(
     profilemodel.Profile,
     on_delete=models.SET_NULL,

@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 
 from .models import Article, ArticleCategory
 from user_management import models as profilemodel
-from forms import CommentForms, ArticleForms
+from .forms import CommentForms, ArticleForms
 
 
 class LoginAuthenticator(object):
@@ -30,7 +30,7 @@ class BlogListView(LoginAuthenticator, ListView):
             ctx['ownarticles'] = ownarticles
         return ctx
 
-class BlogDetailView(LoginRequiredMixin, DetailView):
+class BlogDetailView(LoginAuthenticator, DetailView):
     model = Article
     template_name = 'article_detail.html'
 

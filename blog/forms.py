@@ -4,16 +4,16 @@ from .models import Article, Comment
 class ArticleForms(forms.ModelForm):
     class Meta:
         model = Article
-        field = '__all__'
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['author'].disabled = True
+        self.fields['article-authors'].disabled = True
 
 class CommentForms(forms.ModelForm):
     class Meta:
         model = Comment
-        field = '__all__'
+        fields = ['entry']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
