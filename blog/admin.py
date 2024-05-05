@@ -1,10 +1,13 @@
 from django.contrib import admin
 
-from .models import Article, ArticleCategory
+from .models import Article, ArticleCategory, Comment
 
 
 class Inline(admin.TabularInline):
     model = Article
+
+class CommentInLine(admin.TabularInline):
+    model = Comment
 
 class ArticleCategoryAdmin(admin.ModelAdmin):
     model = ArticleCategory
