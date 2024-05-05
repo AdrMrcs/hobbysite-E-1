@@ -3,12 +3,66 @@
 
 {% block title %}Commission List{% endblock %}
 {% block content %}
-  <h1>Commissions</h1>
+  
+  <h1>My Commissions</h1>
+  {% if user.is_authenticated %}
+    <ul>
+      {% for commission in user_created %}
+        <li>
+          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+
+  <h1>All Commissions</h1>
   <ul>
     {% for commission in object_list %}
-      <li>
-        <h2><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h2>
-      </li>
+      {% if commission.is_open and if not in user_created %}
+        <li>
+          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+          <p>Open</p>
+          <p>Created on {{ commission.created_on }}</p>
+        </li>
+      {% endif %}
     {% endfor %}
   </ul>
+
+  <ul>
+    {% for commission in object_list %}
+      {% if commission.is_full %}
+        <li>
+          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+          <p>Full</p>
+          <p>Created on {{ commission.created_on }}</p>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+  <ul>
+    {% for commission in object_list %}
+      {% if commission.is_completed %}
+        <li>
+          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+          <p>Completed</p>
+          <p>Created on {{ commission.created_on }}</p>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+  <ul>
+    {% for commission in object_list %}
+      {% if commission.is_discontinued %}
+        <li>
+          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+          <p>Discontinued</p>
+          <p>Created on {{ commission.created_on }}</p>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
 {% endblock %}
