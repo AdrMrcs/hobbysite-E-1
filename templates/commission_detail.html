@@ -3,11 +3,11 @@
 
 {% block title %}Commission Details{% endblock %}
 {% block content %}
-  <h2>{{object.title}} comments</h2>
+  <h2>{{object.title}} jobs</h2>
   <ul>
-    {% for comment in object.comments.all %}
+    {% for job in object.jobs.all %}
       <li>
-        <p>{{ comment.entry }}</p>
+        <p>ROLE: {{ job.role }}, PPL: {{ job.manpower_required }}, STATUS: {{ job.status }}</p>
       </li>
     {% endfor %}
   </ul>

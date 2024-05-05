@@ -1,17 +1,25 @@
 from django.contrib import admin
 
-from .models import Commission, Comment
+from .models import Commission, Job, JobApplication
 
 
-class CommentInline(admin.TabularInline):
-    model = Comment
+class JobInline(admin.TabularInline):
+    model = Job
+
+class JobApplicationInline(admin.TabularInline):
+    model = JobApplication
 
 class CommissionAdmin(admin.ModelAdmin):
     model = Commission
-    inlines = [CommentInline,]
+    inlines = [JobInline,]
 
-class CommentAdmin(admin.ModelAdmin):
-    model = Comment
+class JobAdmin(admin.ModelAdmin):
+    model = Job
+    inlines = [JobApplicationInline,]
 
-admin.site.register(Comment, CommentAdmin)
+class JobApplicationAdmin(admin.ModelAdmin):
+    model = JobApplication
+
+admin.site.register(Job, JobAdmin)
+admin.site.register(JobApplication, JobApplicationAdmin)
 admin.site.register(Commission, CommissionAdmin)
