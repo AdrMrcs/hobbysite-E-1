@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import UpdateView
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import RegistrationForm
 
@@ -7,14 +8,14 @@ from .models import Profile
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
-    fields = '__all__'
+    fields = ['name', 'email']
     template_name = "user_update.html"
 
     def get_success_url(self):
         return reverse_lazy("login")
 
     def get_object(self, queryset=None):
-        return self.request.user.Profile
+        return self.request.user.profile
 
 def register(request):
     user_form = RegistrationForm()
