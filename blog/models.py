@@ -22,15 +22,16 @@ class Article(models.Model):
     profilemodel.Profile,
     on_delete=models.SET_NULL,
     related_name='article_authors',
+    null=True
     )
     category = models.ForeignKey(
-        ArticleCategory,
+        'ArticleCategory',
         on_delete = models.SET_NULL,
-        related_name = 'article',
+        related_name = 'articles',
         null = True
     )
     entry = models.TextField()
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    headerimage = models.ImageField(upload_to='images/', null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
