@@ -4,12 +4,26 @@
 {% block title %}Commission List{% endblock %}
 {% block content %}
   
-  <h1>My Commissions</h1>
   {% if user.is_authenticated %}
+    <h1>My Created Commissions</h1>
+  
     <ul>
       {% for commission in user_created %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+          <p>{{ commission.get_status }}</p>
+          <p>Created on {{ commission.created_on }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h1>My Applied Commissions</h1>
+    <ul>
+      {% for commission in user_applied %}
+        <li>
+          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+          <p>{{ commission.get_status }}</p>
+          <p>Created on {{ commission.created_on }}</p>
         </li>
       {% endfor %}
     </ul>
@@ -19,10 +33,10 @@
   <h1>All Commissions</h1>
   <ul>
     {% for commission in object_list %}
-      {% if commission.is_open and if not in user_created %}
+      {% if commission.is_open and commission not in user_created and commission not in user_applied %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
-          <p>Open</p>
+          <p>{{ commission.get_status }}</p>
           <p>Created on {{ commission.created_on }}</p>
         </li>
       {% endif %}
@@ -31,7 +45,7 @@
 
   <ul>
     {% for commission in object_list %}
-      {% if commission.is_full %}
+      {% if commission.is_full and commission not in user_created and commission not in user_applied %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
           <p>Full</p>
@@ -43,7 +57,7 @@
 
   <ul>
     {% for commission in object_list %}
-      {% if commission.is_completed %}
+      {% if commission.is_completed and commission not in user_created and commission not in user_applied %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
           <p>Completed</p>
@@ -55,7 +69,7 @@
 
   <ul>
     {% for commission in object_list %}
-      {% if commission.is_discontinued %}
+      {% if commission.is_discontinued and commission not in user_created and commission not in user_applied %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
           <p>Discontinued</p>

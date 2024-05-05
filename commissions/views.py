@@ -15,7 +15,13 @@ class CommissionListView(ListView):
         ctx = super().get_context_data(**kwargs)
         if user.is_authenticated:
             ctx['user_created'] = Commission.objects.filter(created_by=user.profile)
-            # make user_applied
+            ctx['user_applied'] = []
+            for commission in Commission.objects.all():
+                for job in commission.jobs.all():
+                    for job_app in job.job_apps.all():
+                        if job_app.applicant == user.profile:
+                            ctx['user_applied'].append(commission)
+
         return ctx
 
 class CommissionDetailView(DetailView):
