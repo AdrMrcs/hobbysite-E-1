@@ -6,5 +6,49 @@
 {% block content %}
 <a href="{% url 'blog:article-list' %}"><h1>Blog List</h1></a>
   <h2>{{article.title}}</h2>
+
+  {% if article.headerimage %}
+    <img src = "{{ article.headerimage.url }}" alt="image">
+  {% else %}
+    <p>Image not available.</p>
+  {% endif %}
   <p>{{article.entry}}</p>
+  {% if request.user.is_authenticated %}
+  {{ form.as_p }}
+  <h3>Submit a Comment!</h3>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Submit</button>
+  </form>
+  {% else %}
+  <p><a href="{% url 'login' %}">Please login to submit a comment.</a></p>
+  {% endif %}
+
+{% if viewer == article.author %}
+<a href="{% url 'blog:article-edit' pk=article.pk %}"><button>Edit</button></a>
+{% endif %}
+
+<h2>Comments</h2>
+<ul>
+  {% for comment in article.comment.all %}
+  <li>
+    <h5>{{ comment.author }}</h5>
+    <p>{{ comment.entry }}</p>
+    <p>Created On: {{ comment.created_on }}</p>
+    <p>Updated On: {{ comment.updated_on }}</p>
+  </li>
+  {% empty %}
+    <li>Be the first one to Comment!</l1>
+  {% endfor %}
+</ul>
+
+<h4>More articles from {{ article.author }}:</h4>
+<ul>
+  {% for related_article in articlesniauthor %}
+    {% if related_article.pk != object.pk %}
+        <li><a href="{{ related_article.get_absolute_url }}">{{ related_article.title }}</a></li>
+    {% endif %}
+  {% endfor %} 
+</ul>
+
 {% endblock content %}

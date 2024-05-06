@@ -33,7 +33,8 @@
       {% for article in article_category.articles.all %}
         <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
       {% endfor %}
-      </ul>
     {% endif %}
-    {% endfor %}
+  </ul>
+
+{% endfor %}
 {% endblock %}  

@@ -36,13 +36,13 @@ class BlogDetailView(LoginAuthenticator, DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        article = self.get_object()
+        current_article = self.get_object()
         if self.request.user.is_authenticated:
             author = profilemodel.Profile.objects.get(user=self.request.user)
-            ownarticles = Article.objects.filter(author=author)
-            ctx['ownarticles'] = ownarticles
+            articlesniauthor = Article.objects.filter(author=author).exclude(pk=current_article.pk)
+            ctx['articlesniauthor'] = articlesniauthor
+            ctx['form'] = CommentForms()
             ctx['viewer'] = author
-            ctx['form'] = CommentForms(initial={'author': author,'article': article})
         return ctx
     
     def post(self, request, *args, **kwargs):
@@ -62,7 +62,7 @@ class BlogDetailView(LoginAuthenticator, DetailView):
 class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Article
     form_class = ArticleForms
-    template_name = ''
+    template_name = 'article_add.html'
 
     def get_success_url(self):
         return reverse_lazy('blog:article-detail', kwargs={'pk': self.object.pk})
@@ -84,7 +84,7 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
 class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Article
     form_class = ArticleForms
-    template_name = ''
+    template_name = 'article_update.html'
 
     def get_success_url(self):
         return reverse_lazy('blog:article-detail', kwargs={'pk': self.object.pk})
