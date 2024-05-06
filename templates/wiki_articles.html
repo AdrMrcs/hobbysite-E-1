@@ -6,36 +6,48 @@
 {% block content %}
 
 {% if request.user.is_authenticated %}
-    <h1> hello, {{ user.username }}</h1>
+  <h1> hello, {{ user.username }}</h1>
 {% endif %}
 
 <h1>Wiki Articles</h1>
 
 {% if request.user.is_authenticated %}
-    <h2>Your Articles</h2>
-    <ul>
-        {% for article in authorArticles %}
-            <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
-        {% endfor %}
-    </ul>
+  <h2>Your Articles</h2>
+  <ul>
+      {% for article in authorArticles %}
+          <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+      {% endfor %}
+  </ul>
+  <a href="{% url 'wiki:article_create' %}"><button>Create Article</button></a>
 {% endif %}
 
-<h1>All Articles</h1>
-{% for article_category in object_list %}
-  <h2>{{article_category.name}}</h2>
-  <ul>
-    {% if request.user.is_authenticated %}
-      {% for article in article_category.articlecategory.all %}
-        {% if article not in authorArticles %}
-          <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
-        {% endif %}
-      {% endfor %}
-    {% else %}
-      {% for article in article_category.articlecategory.all %}
+<h1>All Articles by Category</h1>
+{% for category in object_list %}
+<h2>{{category.name}}</h2>
+<ul>
+  {% if request.user.is_authenticated %}
+    {% for article in category.articlecategory.all %}
+      {% if article not in authorArticles %}
         <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
-      {% endfor %}
-    {% endif %}
-  </ul>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    {% for article in category.articlecategory.all %}
+      <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+    {% endfor %}
+  {% endif %}
+</ul>
 {% endfor %}
+
+{% if object_list %}
+  <div>
+    <h1>Wiki Gallery:</h1>
+    {% for i in object_list %}
+    {% for j in i.articlecategory.all %}
+    <img src = "{{ j.headerImage.url }}" alt="image">
+    {% endfor %}
+    {% endfor %}
+  </div>
+{% endif %}
 
 {% endblock %}
