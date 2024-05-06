@@ -1,50 +1,51 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Article Detail{% endblock %}
+{% block header %}wiki Articles{% endblock %}
+{% block title %}wiki Detail{% endblock %}
 {% block content %}
+<a href="{% url 'wiki:article_list' %}"><h1>Wiki List</h1></a>
+  <h2>{{article.title}}</h2>
 
-<h1>{{ object.title }}</h1>
-    
-{% if object.image %}
-    <img src="{{ object.image.url }}" alt="Article Image">
-{% endif %}
+  {% if article.headerImage %}
+    <img src = "{{ article.headerImage.url }}" alt="image">
+  {% else %}
+    <p>Image not available.</p>
+  {% endif %}
+  <p>{{article.entry}}</p>
+  {% if request.user.is_authenticated %}
+  <h3>Submit a Comment!</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+  {% else %}
+  <p><a href="{% url 'login' %}">Please login to submit a comment.</a></p>
+  {% endif %}
 
-<p>{{ object.entry }}</p>
-
-{% if request.user.is_authenticated %}
-    {% if object.author == request.user %}
-        <a href="{% url 'update_article' object.pk %}">Edit Article</a>
-    {% endif %}
-{% endif %}
-
-<h2>Read More from {{ object.category.name }}</h2>
-<ul>
-    {% for article in object.category.article.exclude(pk=object.pk)[:2] %}
-        <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
-    {% endfor %}
-</ul>
-
-<a href="{% url 'blog:article-list' %}">Back to Article List</a>
 
 <h2>Comments</h2>
 <ul>
-    {% for comment in object.comment.all %}
-        <li>
-            {{ comment.content }} - {{ comment.author.username }} ({{ comment.created_on|date:"Y-m-d H:i:s" }})
-        </li>
-    {% endfor %}
+  {% for comments in article.comments.all %}
+  <li>
+    <h5>{{ comments.author }}</h5>
+    <p>{{ comments.entry }}</p>
+    <p>Created On: {{ comments.created_on }}</p>
+    <p>Updated On: {{ comments.updated_on }}</p>
+  </li>
+  {% empty %}
+    <li>Be the first one to Comment!</l1>
+  {% endfor %}
 </ul>
 
-{% if request.user.is_authenticated %}
-    <h3>Add a Comment</h3>
-    <form method="post" action="{% url 'add_comment' object.pk %}">
-        {% csrf_token %}
-        <textarea name="content" rows="4" cols="50"></textarea><br>
-        <input type="submit" value="Submit">
-    </form>
-{% else %}
-    <p>Please <a href="{% url 'login' %}">login</a> to add a comment.</p>
-{% endif %}
+<h4>More articles from {{ article.author }}:</h4>
+<ul>
+  {% for related_article in articlesniauthor %}
+    {% if related_article.pk != object.pk %}
+        <li><a href="{{ related_article.get_absolute_url }}">{{ related_article.title }}</a></li>
+    {% endif %}
+  {% endfor %} 
+</ul>
 
-{% endblock %}
+{% endblock content %}
