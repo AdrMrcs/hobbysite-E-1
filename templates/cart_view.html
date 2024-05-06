@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/merchstore.css' %}">
+
+    <div class="header">
+        <h1>Merchandise Store</h1>
+    </div>
+
+    <div class="content">
+        {% for transaction in object_list %}
+        <ul>
+            {% if transaction.buyer.name == user.get_username %}
+                <li class="productname">{{transaction.product.name}}</li>
+                <ul>
+                    <li>Owner: {{transaction.product.owner.name}}</li>
+                    <li>Amount: {{transaction.amount}}</li>
+                    <li>Data: {{transaction.created_on}}</li>
+                </ul>
+            {% endif %}
+        </ul>
+        {% endfor %}
+    </div>
+    <h3><a href="/merchstore/items">Go back to product list</a></h3>
+    
+{% endblock %}

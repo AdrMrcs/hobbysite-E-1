@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/merchstore.css' %}">
+    <div class="forms">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <div class="center">
+                <button type="submit" class="buttons">Submit</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

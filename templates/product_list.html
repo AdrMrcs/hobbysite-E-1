@@ -2,84 +2,63 @@
 {% load static %}
 
 {% block content %}
-  <style>
-    body {
-    margin: 0;
-    background-color: beige;
-    }
-    .header {
-    margin: 0;
-    padding: 10pt;
-    background: #6e7a4c;
-    color: beige;
-    box-shadow: 0px 5px 50px #808080;
-    }
-    .content {
-    width: 50%;
-    padding-top: 25px;
-    margin: auto;
-    color: #836443;
-    }
-    h1 {
-    text-align: center;
-    font-size: 50pt;
-    font-family: 'trebuchet ms';
-    font-weight: 900;
-    }
-    h2 {
-    font-family: 'arial';
-    font-size: 35pt;
-    font-weight: 900;
-    }
-    h3 {
-    text-align: center;
-    font-family: 'arial';
-    font-weight: 100;
-    font-size: 10pt;
-    padding: 30pt;
-    }
-    li {
-    list-style-type: none;
-    font-family: 'arial';
-    font-weight: 100;
-    color: #898888;
-    margin: 20px 25px;
-    }
-    a {
-    text-decoration: none;
-    color: #836443;
-    }
-    a:hover{
-    background-color: #6e7a4c;
-    border-radius: 5pt;
-    padding: 5pt;
-    color: beige;
-    }
-    .productname {
-    font-size: 25pt;
-    color: #614a32;
-    }
-  </style>
+    <link rel="stylesheet" href="{% static 'css/merchstore.css' %}">
 
-  <div class="header">
-    <h1>Merchandise Store</h1>
-  </div>
+    <div class="header">
+        <h1>Merchandise Store</h1>
+        <h3>Logged in as {{user.get_username}}</h3>
+    </div>
 
-  <div class="content">
-    <h2>Product Types</h2>
-    <ul>
-      {% for type in object_list %}
-        <li><span class="productname">{{type.name}}</span> {{type.description}}
-          <ul>
-            {% for product in type.products.all %}
-              <li> 
-                <a href="{{product.get_absolute_url}}">{{product.name}}</a>
-              </li>
-            {% endfor %}
-          </ul>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+    <div class="content">
+        <h2>Products</h2>
+        {% if user.is_authenticated%}
+            <h3>Your Products</h3>
+            <ul>
+                {% for product in object_list %}
+                    {% if product.owner.name == user.get_username %}
+                        <li><a href="{{product.get_absolute_url}}"><span class="productname">{{product.name}}</span></a>
+                            <ul>
+                                <li>Type: {{product.producttype}}</li>
+                                <li>Price: {{product.price}}</li>
+                                <li>Stock: {{product.stock}}</li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <h3>All Products</h3>
+            <ul>
+                {% for product in object_list %}
+                    {% if product.owner.name != user.get_username %}
+                        <li><a href="{{product.get_absolute_url}}"><span class="productname">{{product.name}}</span></a>
+                            <ul>
+                                <li>Owner: {{product.owner.name}}</li>
+                                <li>Type: {{product.producttype}}</li>
+                                <li>Price: {{product.price}}</li>
+                                <li>Stock: {{product.stock}}</li>
+                                <li>Status: {{product.status}}</li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% else %}
+            <ul>
+                {% for product in object_list %}
+                    <li><a href="{{product.get_absolute_url}}"><span class="productname">{{product.name}}</span></a>
+                        <ul>
+                            <li>Owner: {{product.owner.name}}</li>
+                            <li>Type: {{product.producttype}}</li>
+                            <li>Price: {{product.price}}</li>
+                            <li>Stock: {{product.stock}}</li>
+                            <li>Status: {{product.status}}</li>
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <a href="item/add">Add a Product</a>
+    </div>
 
 {% endblock %}
