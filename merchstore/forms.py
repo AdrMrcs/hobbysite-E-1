@@ -10,7 +10,7 @@ from user_management.models import Profile
 class TransactionForm (forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['amount', ]
+        fields = ['buyer', 'amount', ]
     
     def __init__(self, *args, **kwargs):
         super().__init__()
@@ -18,6 +18,10 @@ class TransactionForm (forms.ModelForm):
         self.product = Product.objects.filter(id=self.pk)
         stock = self.product[0].stock
         self.fields['amount'].widget.attrs.update ({'max': stock,'min': 0})
+        if kwargs['user']:
+            self.fields['buyer'].queryset = Profile.objects.filter(name=kwargs.pop('user'))
+        else:
+            self.fields['buyer'].queryset = Profile.objects.all()
         
 
 class ProductForm (forms.ModelForm):
