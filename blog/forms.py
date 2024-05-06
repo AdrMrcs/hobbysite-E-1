@@ -8,7 +8,7 @@ class ArticleForms(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['article-authors'].disabled = True
+        self.fields['author'].disabled = True
 
 class CommentForms(forms.ModelForm):
     class Meta:
