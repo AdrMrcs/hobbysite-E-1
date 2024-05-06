@@ -10,12 +10,15 @@ from .models import Article, ArticleCategory, Comment
 from .forms import ArticleForm, CommentForms
 from user_management import models as profilemodel
 
+
 class LoginAuthenticator(object):
     def get_author_profile(self):
         if self.request.user.is_authenticated:
-            author, _ = profilemodel.Profile.objects.get_or_create(user=self.request.user)
+            author, _ = profilemodel.Profile.objects.get_or_create(
+                user=self.request.user)
             return author
         return None
+
 
 class WikiListView(LoginAuthenticator, ListView):
     model = ArticleCategory
@@ -29,6 +32,7 @@ class WikiListView(LoginAuthenticator, ListView):
             ctx['authorArticles'] = authorArticles
         return ctx
 
+
 class WikiDetailView(LoginAuthenticator, DetailView):
     model = Article
     template_name = 'wiki_details.html'
@@ -38,12 +42,13 @@ class WikiDetailView(LoginAuthenticator, DetailView):
         currentArticle = self.get_object()
         if self.request.user.is_authenticated:
             author = profilemodel.Profile.objects.get(user=self.request.user)
-            articleFromAuthor = Article.objects.filter(author=author).exclude(pk=currentArticle.pk)
+            articleFromAuthor = Article.objects.filter(
+                author=author).exclude(pk=currentArticle.pk)
             ctx['articleFromAuthor'] = articleFromAuthor
             ctx['form'] = CommentForms()
             ctx['viewer'] = author
         return ctx
-    
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = CommentForms(request.POST)
@@ -57,6 +62,7 @@ class WikiDetailView(LoginAuthenticator, DetailView):
             ctx = self.get_context_data(form=form)
         return self.render_to_response(ctx)
 
+
 class CreateWikiArticle(LoginRequiredMixin, CreateView):
     model = Article
     form_class = ArticleForm
@@ -64,11 +70,13 @@ class CreateWikiArticle(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('wiki:article_details', kwargs={'pk': self.object.pk})
-    
+
     def form_valid(self, form):
-        form.instance.author = profilemodel.Profile.objects.get(user=self.request.user)
+        form.instance.author = profilemodel.Profile.objects.get(
+            user=self.request.user)
         return super().form_valid(form)
-    
+
+
 class EditWikiArticle(LoginRequiredMixin, UpdateView):
     model = Article
     form_class = ArticleForm
@@ -76,7 +84,7 @@ class EditWikiArticle(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('wiki:article_details', kwargs={'pk': self.object.pk})
-    
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
