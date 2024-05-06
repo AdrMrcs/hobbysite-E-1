@@ -47,16 +47,15 @@ class BlogDetailView(LoginAuthenticator, DetailView):
     
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        author = profilemodel.Profile.objects.get(user=self.request.user)
-        article = self.get_object()
         form = CommentForms(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
-            comment.author = author
-            comment.article = article
+            comment.author = self.get_author_profile()
+            comment.article = self.object
             comment.save()
-            return redirect('blog:article-detail', pk=article.pk)
-        ctx = self.get_context_data(**kwargs)
+            return redirect('blog:article-detail', pk=self.object.pk)
+        else:
+            ctx = self.get_context_data(form=form)
         return self.render_to_response(ctx)
     
 class BlogCreateView(LoginRequiredMixin, CreateView):
