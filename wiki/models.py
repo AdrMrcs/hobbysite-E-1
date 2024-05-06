@@ -31,7 +31,7 @@ class Article(models.Model):
         related_name="articlecategory"
     )
     entry = models.TextField
-    headerImage = models.ImageField
+    headerImage = models.ImageField(upload_to="images/", null=False)
     createdOn = models.DateTimeField(auto_now_add=True)
     updatedOn = models.DateTimeField(auto_now=True)
 
