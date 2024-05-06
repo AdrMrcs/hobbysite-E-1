@@ -30,7 +30,8 @@ class ProductDetailView (CreateView):
 
     def setup(self, request: HttpRequest, *args, **kwargs):
         self.pk = kwargs['pk']
-        self.username = request.user.username
+        if hasattr(request, 'user'):
+            self.username = request.user.username
         return super().setup(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
@@ -41,13 +42,14 @@ class ProductDetailView (CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['pk'] = self.pk
-        kwargs['user'] = self.username
+        if hasattr(self, 'username'):
+            kwargs['user'] = self.username
         return kwargs
     
     def post(self, request: HttpRequest, *args, **kwargs):
         product = Product.objects.get(id=self.pk)
         amount = int(request.POST.get('amount'))
-        buyer = Profile.objects.get(name=self.username)
+        buyer = Profile.objects.get(id=request.POST.get('buyer'))
         update_stock(product, amount)
         add_transaction(buyer, product, amount)
         return HttpResponseRedirect(self.get_success_url())
