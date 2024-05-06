@@ -53,14 +53,17 @@ class Comment(models.Model):
         related_name="commentauthor"
     )
     article = models.ForeignKey(
-        "ArticleCategory",
+        Article,
         on_delete=models.CASCADE,
         default=1,
         related_name="commentarticle"
     )
     entry = models.TextField()
     createdOn = models.DateTimeField(auto_now_add = True)
-    updatedOn = models.DateTimeField(auto_now = False)
+    updatedOn = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return f"Created on: {self.createdOn} Updated on: {self.updatedOn}"
 
     class Meta:
         ordering = ["createdOn"]
