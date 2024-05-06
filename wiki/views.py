@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
@@ -29,17 +29,17 @@ class WikiListView(LoginAuthenticator, ListView):
             ctx['authorArticles'] = authorArticles
         return ctx
 
-class WikiDetailView(DetailView):
+class WikiDetailView(LoginAuthenticator, DetailView):
     model = Article
     template_name = 'wiki_details.html'
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        current_article = self.get_object()
+        currentArticle = self.get_object()
         if self.request.user.is_authenticated:
             author = profilemodel.Profile.objects.get(user=self.request.user)
-            articlesniauthor = Article.objects.filter(author=author).exclude(pk=current_article.pk)
-            ctx['articlesniauthor'] = articlesniauthor
+            articleFromAuthor = Article.objects.filter(author=author).exclude(pk=currentArticle.pk)
+            ctx['articleFromAuthor'] = articleFromAuthor
             ctx['form'] = CommentForms()
             ctx['viewer'] = author
         return ctx
@@ -52,7 +52,7 @@ class WikiDetailView(DetailView):
             comment.author = self.get_author_profile()
             comment.article = self.object
             comment.save()
-            return redirect('wiki:article-detail', pk=self.object.pk)
+            return redirect('wiki:article_details', pk=self.object.pk)
         else:
             ctx = self.get_context_data(form=form)
         return self.render_to_response(ctx)
@@ -63,4 +63,20 @@ class CreateWikiArticle(LoginRequiredMixin, CreateView):
     template_name = 'wiki_create.html'
 
     def get_success_url(self):
-        return reverse_lazy('ledger:articles')
+        return reverse_lazy('wiki:article_details', kwargs={'pk': self.object.pk})
+    
+    def form_valid(self, form):
+        form.instance.author = profilemodel.Profile.objects.get(user=self.request.user)
+        return super().form_valid(form)
+    
+class EditWikiArticle(LoginRequiredMixin, UpdateView):
+    model = Article
+    form_class = ArticleForm
+    template_name = 'wiki_edit.html'
+
+    def get_success_url(self):
+        return reverse_lazy('wiki:article_details', kwargs={'pk': self.object.pk})
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

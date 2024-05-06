@@ -1,7 +1,13 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Article Detail{% endblock %}
+{% block title %}Update Article{% endblock title %}
 {% block content %}
 
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>Update</button>
+    </form>
+    
 {% endblock %}
