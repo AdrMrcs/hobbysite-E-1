@@ -16,13 +16,22 @@ class ArticleCategory(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=255)
+    author = models.ForeignKey(
+        Profile,
+        on_delete=models.SET_NULL,
+        null=True,
+        default=1,
+        related_name="articleauthor"
+    )
     category = models.ForeignKey(
         "ArticleCategory",
         on_delete=models.SET_NULL,
         null=True,
         default=1,
-        related_name="articlecategory",
+        related_name="articlecategory"
     )
+    entry = models.TextField
+    headerImage = models.ImageField
     createdOn = models.DateTimeField(auto_now_add=True)
     updatedOn = models.DateTimeField(auto_now=True)
 
