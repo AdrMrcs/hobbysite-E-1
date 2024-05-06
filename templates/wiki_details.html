@@ -13,6 +13,11 @@
     <p>Image not available.</p>
   {% endif %}
   <p>{{article.entry}}</p>
+
+  {% if viewer == article.author %}
+  <a href="{% url 'wiki:article_edit' pk=article.pk %}"><button>Edit</button></a>
+  {% endif %}
+
   {% if request.user.is_authenticated %}
   <h3>Submit a Comment!</h3>
   <form method="post">
@@ -24,15 +29,14 @@
   <p><a href="{% url 'login' %}">Please login to submit a comment.</a></p>
   {% endif %}
 
-
 <h2>Comments</h2>
 <ul>
-  {% for comments in article.comments.all %}
+  {% for comments in article.commentarticle.all %}
   <li>
     <h5>{{ comments.author }}</h5>
     <p>{{ comments.entry }}</p>
-    <p>Created On: {{ comments.created_on }}</p>
-    <p>Updated On: {{ comments.updated_on }}</p>
+    <p>Created On: {{ comments.createdOn }}</p>
+    <p>Updated On: {{ comments.updatedOn }}</p>
   </li>
   {% empty %}
     <li>Be the first one to Comment!</l1>
@@ -41,7 +45,7 @@
 
 <h4>More articles from {{ article.author }}:</h4>
 <ul>
-  {% for related_article in articlesniauthor %}
+  {% for related_article in articleFromAuthor %}
     {% if related_article.pk != object.pk %}
         <li><a href="{{ related_article.get_absolute_url }}">{{ related_article.title }}</a></li>
     {% endif %}
