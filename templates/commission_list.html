@@ -32,51 +32,12 @@
 
   <h1>All Commissions</h1>
   <ul>
-    {% for commission in object_list %}
-      {% if commission.is_open and commission not in user_created and commission not in user_applied %}
-        <li>
-          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
-          <p>{{ commission.get_status }}</p>
-          <p>Created on {{ commission.created_on }}</p>
-        </li>
-      {% endif %}
+    {% for commission in remaining_commissions %}
+      <li>
+        <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+        <p>{{ commission.get_status }}</p>
+        <p>Created on {{ commission.created_on }}</p>
+      </li>
     {% endfor %}
   </ul>
-
-  <ul>
-    {% for commission in object_list %}
-      {% if commission.is_full and commission not in user_created and commission not in user_applied %}
-        <li>
-          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
-          <p>Full</p>
-          <p>Created on {{ commission.created_on }}</p>
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-
-  <ul>
-    {% for commission in object_list %}
-      {% if commission.is_completed and commission not in user_created and commission not in user_applied %}
-        <li>
-          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
-          <p>Completed</p>
-          <p>Created on {{ commission.created_on }}</p>
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-
-  <ul>
-    {% for commission in object_list %}
-      {% if commission.is_discontinued and commission not in user_created and commission not in user_applied %}
-        <li>
-          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
-          <p>Discontinued</p>
-          <p>Created on {{ commission.created_on }}</p>
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-
 {% endblock %}
