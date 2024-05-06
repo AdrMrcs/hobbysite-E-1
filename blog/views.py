@@ -67,18 +67,8 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('blog:article-detail', kwargs={'pk': self.object.pk})
     
     def form_valid(self, form):
-        author = profilemodel.Profile.objects.get(user=self.request.user)
-        form.instance.author = author
+        form.instance.author = profilemodel.Profile.objects.get(user=self.request.user)
         return super().form_valid(form)
-    
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        author = profilemodel.Profile.objects.get(user=self.request.user)
-        ctx['form'] = ArticleForms(initial={'author': author})
-
-    def get_initial(self):
-        author = profilemodel.Profile.objects.get(user=self.request.user)
-        return {'author':author}
     
 class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Article
