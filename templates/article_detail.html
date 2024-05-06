@@ -14,10 +14,10 @@
   {% endif %}
   <p>{{article.entry}}</p>
   {% if request.user.is_authenticated %}
-  {{ form.as_p }}
   <h3>Submit a Comment!</h3>
   <form method="post">
     {% csrf_token %}
+    {{ form.as_p }}
     <button type="submit">Submit</button>
   </form>
   {% else %}
@@ -30,12 +30,12 @@
 
 <h2>Comments</h2>
 <ul>
-  {% for comment in article.comment.all %}
+  {% for comments in article.comments.all %}
   <li>
-    <h5>{{ comment.author }}</h5>
-    <p>{{ comment.entry }}</p>
-    <p>Created On: {{ comment.created_on }}</p>
-    <p>Updated On: {{ comment.updated_on }}</p>
+    <h5>{{ comments.author }}</h5>
+    <p>{{ comments.entry }}</p>
+    <p>Created On: {{ comments.created_on }}</p>
+    <p>Updated On: {{ comments.updated_on }}</p>
   </li>
   {% empty %}
     <li>Be the first one to Comment!</l1>
