@@ -30,8 +30,7 @@ class ProductDetailView (CreateView):
 
     def setup(self, request: HttpRequest, *args, **kwargs):
         self.pk = kwargs['pk']
-        if hasattr(request, 'user'):
-            self.username = request.user.username
+        self.username = request.user.username
         return super().setup(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
@@ -42,8 +41,7 @@ class ProductDetailView (CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['pk'] = self.pk
-        if hasattr(self, 'username'):
-            kwargs['user'] = self.username
+        kwargs['user'] = self.username
         return kwargs
     
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -56,6 +54,10 @@ class ProductDetailView (CreateView):
         
 def update_stock (product: Product, amount: int):
     product.stock -= amount
+    if product.stock <= 0:
+        product.status = 'Out of Stock'
+    else:
+        product.status = 'Available'
     product.save()
 
 def add_transaction (buyer: Profile, product: Product, amount: int):
