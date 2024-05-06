@@ -6,11 +6,7 @@
 
     <div class="header">
         <h1>Merchandise Store</h1>
-        {% if user.is_authenticated %}
-            <h3>Logged in as {{user.get_username}}</h3>
-        {% else %}
-            <h3>You are currently logged out</h3>
-        {% endif%}
+        <h3>Logged in as {{user.get_username}}</h3>
     </div>
 
     <div class="content">

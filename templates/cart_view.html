@@ -6,6 +6,7 @@
 
     <div class="header">
         <h1>Merchandise Store</h1>
+        <h3>Logged in as {{user.get_username}}</h3>
     </div>
 
     <div class="content">
@@ -16,7 +17,8 @@
                 <ul>
                     <li>Owner: {{transaction.product.owner.name}}</li>
                     <li>Amount: {{transaction.amount}}</li>
-                    <li>Data: {{transaction.created_on}}</li>
+                    <li>Date: {{transaction.created_on}}</li>
+                    <li>Status: {{transaction.status}}</li>
                 </ul>
             {% endif %}
         </ul>

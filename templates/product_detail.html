@@ -21,6 +21,7 @@
                 <li>Price: PHP {{object.price}}</li>
                 <li>Type: {{object.producttype.name}}</li>
                 <li>Description: {{object.description}}</li>
+                <li>Status: {{object.status}} (Stock: {{object.stock}})</li>
             </ul>
         </ul>
         {% if user.is_authenticated %}
