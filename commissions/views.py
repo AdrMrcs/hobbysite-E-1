@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic import TemplateView
+from django.shortcuts import redirect
 
 from .models import Commission, Job, JobApplication
 from user_management.models import Profile
@@ -18,18 +20,20 @@ class CommissionListView(ListView):
             ctx["user_created"] = Commission.objects.filter(created_by=user.profile)
 
             ctx["user_applied"] = []
+            ctx["user_applied_wo_status"] = []
             for commission in Commission.objects.all():
                 for job in commission.jobs.all():
                     for job_app in job.job_apps.all():
                         if job_app.applicant == user.profile:
-                            ctx["user_applied"].append(commission)
+                            ctx["user_applied"].append((commission, job_app.get_status))
+                            ctx["user_applied_wo_status"].append(commission)
 
             ctx["remaining_commissions"] = []
             tmp_rem_commissions = []  # (status, commission) -> sorted
             for commission in Commission.objects.all():
                 if (
                     commission not in ctx["user_created"]
-                    and commission not in ctx["user_applied"]
+                    and commission not in ctx["user_applied_wo_status"]
                 ):
                     tmp_rem_commissions.append(
                         (commission.get_status_sort_value(), commission)
@@ -41,6 +45,35 @@ class CommissionListView(ListView):
         return ctx
 
 
-class CommissionDetailView(DetailView):
+class CommissionDetailView(TemplateView):
     model = Commission
     template_name = "commission_detail.html"
+
+    def post(self, request, *args, **kwargs):
+        job_id = request.POST.get("job_id")
+        profile = request.user.profile
+        if job_id:
+            job = Job.objects.get(pk=job_id)
+            already_exists = False
+            for job_apps in JobApplication.objects.all():
+                if job_apps.applicant == profile and job_apps.job == job:
+                    already_exists = True
+
+            if job.manpower_left > 0 and not already_exists:
+                JobApplication.objects.create(job=job, applicant=profile)
+
+        return self.render_to_response(self.get_context_data())
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        ctx = super().get_context_data(**kwargs)
+
+        if user.is_authenticated:
+            commission_id = self.kwargs["pk"]
+            ctx["commission"] = Commission.objects.get(id=commission_id)
+            ctx["jobs"] = []
+
+            for job in Job.objects.filter(commission=ctx["commission"]):
+                ctx["jobs"].append((job, (job.manpower_left > 0)))
+
+        return ctx

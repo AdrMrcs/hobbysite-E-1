@@ -3,13 +3,41 @@
 
 {% block title %}Commission Details{% endblock %}
 {% block content %}
-  <h2>{{object.title}} jobs</h2>
+
+  <h1>{{ commission.title }}</h1>
+  <p>Description: {{ commission.description }}</p>
+  <p>Status: {{ commission.get_status }}</p>
+  <p>Created on {{ commission.created_on }}</p>
+  <p>Updated on {{ commission.updated_on }}</p>
+
+  <h2>Jobs</h2>
   <ul>
-    {% for job in object.jobs.all %}
+    {% for job, can_apply in jobs %}
       <li>
-        <p>ROLE: {{ job.role }}, PPL: {{ job.manpower_required }}, STATUS: {{ job.get_status }}</p>
+        <h3>{{ job }}</h3>
+
+        <!-- Edit button -->
+        {% if request.user.is_authenticated and request.user.profile == job.commission.created_by %}
+          <a href="{% url 'homepage:homepage' %}">Edit</a>
+          <!-- WILL EDIT ^ -->
+        {% endif %}
+        
+        <p>Manpower required: {{ job.manpower_required }}</p>
+        <p>Manpower left: {{ job.manpower_left }}</p>
+      
+        <!-- Apply button -->
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="job_id" value="{{ job.pk }}">
+          {% if can_apply %}
+            <button type="submit">Apply</button>
+          {% else %}
+            <button type="submit" disabled>Apply</button>
+          {% endif %}
+        </form>
+
+        
       </li>
     {% endfor %}
   </ul>
-  <a href="{% url 'commissions:commission-list' %}">Return to Commission List</a>
 {% endblock %}

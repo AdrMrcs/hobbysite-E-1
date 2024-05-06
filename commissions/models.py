@@ -87,14 +87,27 @@ class Job(models.Model):
     )
     role = models.CharField(max_length=255)
     manpower_required = models.IntegerField()
+    manpower_accepted = models.IntegerField()
     status = models.CharField(max_length=25, choices=STATUS_CHOICES["JOB"], default="1")
 
     def __str__(self):
-        return f"Job from {self.commission.title}. PK={self.pk}"
+        return f"{self.role}"
 
     @property
     def get_status(self):
         return STATUS_CHOICES["JOB"][self.status]
+
+    @property
+    def manpower_left(self):
+        return self.manpower_required - self.manpower_accepted
+
+    @property
+    def manpower_increment(self):
+        self.manpower_accepted += 1
+
+    @property
+    def manpower_decrement(self):
+        self.manpower_accepted -= 1
 
     class Meta:
         ordering = ["-status", "-manpower_required", "role"]

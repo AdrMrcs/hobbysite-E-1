@@ -19,11 +19,12 @@
 
     <h1>My Applied Commissions</h1>
     <ul>
-      {% for commission in user_applied %}
+      {% for commission, status in user_applied %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
           <p>{{ commission.get_status }}</p>
           <p>Created on {{ commission.created_on }}</p>
+          <p>Application status: {{ status }} </p>
         </li>
       {% endfor %}
     </ul>
