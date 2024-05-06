@@ -1,18 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Blog{% endblock %}
+{% block title %}
+{{ name }}
+{% endblock %}
+
 {% block content %}
-<a href="{% url 'blog:article-list' %}"><h1>Blog List</h1></a>
-  {% for articlecategory in object_list %}
-    <h2>{{ articlecategory.name }}</h2>
-    <p>{{ articlecategory.description }}</p>
-    <ul>
-      {% for article in articlecategory.article.all %}
-        <li>   
-          <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
-        </li>
+  <p>Sup my main man {{ user.username }} </p>
+  <h1>Articles</h1>
+
+  {% if request.user.is_authenticated %}
+    <h1>My Articles</h1>
+      <ul>
+        {% for article in ownarticles %}
+          <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</li>
+        {% endfor %}
+        </ul>
+        <a href="{% url 'blog:article-create' %}"><button>Create Article</button></a>
+  {% endif %}
+
+<h1>All Articles</h1>
+{% for article_category in object_list %}
+  <h2>{{article_category.name}}</h2>
+  <ul>
+    {% if request.user.is_authenticated %}
+      {% for article in article_category.articles.all %}
+        {% if article not in ownarticles %}
+          <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+        {% endif %}
       {% endfor %}
-    </ul>
-  {% endfor %}
+    {% else %}
+      {% for article in article_category.articles.all %}
+        <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    {% endfor %}
 {% endblock %}  
