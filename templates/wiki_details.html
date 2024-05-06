@@ -3,8 +3,48 @@
 
 {% block title %}Article Detail{% endblock %}
 {% block content %}
-  <p>{{ object }}</p>
-  <a href="/wiki/articles">
-    <h2>Go back to article list</h2>
-  </a>
+
+<h1>{{ object.title }}</h1>
+    
+{% if object.image %}
+    <img src="{{ object.image.url }}" alt="Article Image">
+{% endif %}
+
+<p>{{ object.entry }}</p>
+
+{% if request.user.is_authenticated %}
+    {% if object.author == request.user %}
+        <a href="{% url 'update_article' object.pk %}">Edit Article</a>
+    {% endif %}
+{% endif %}
+
+<h2>Read More from {{ object.category.name }}</h2>
+<ul>
+    {% for article in object.category.article.exclude(pk=object.pk)[:2] %}
+        <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'blog:article-list' %}">Back to Article List</a>
+
+<h2>Comments</h2>
+<ul>
+    {% for comment in object.comment.all %}
+        <li>
+            {{ comment.content }} - {{ comment.author.username }} ({{ comment.created_on|date:"Y-m-d H:i:s" }})
+        </li>
+    {% endfor %}
+</ul>
+
+{% if request.user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="post" action="{% url 'add_comment' object.pk %}">
+        {% csrf_token %}
+        <textarea name="content" rows="4" cols="50"></textarea><br>
+        <input type="submit" value="Submit">
+    </form>
+{% else %}
+    <p>Please <a href="{% url 'login' %}">login</a> to add a comment.</p>
+{% endif %}
+
 {% endblock %}
