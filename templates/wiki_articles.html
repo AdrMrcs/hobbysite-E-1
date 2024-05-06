@@ -5,26 +5,37 @@
 {% block title %}Hobbysite{% endblock %}
 {% block content %}
 
+{% if request.user.is_authenticated %}
+    <h1> hello, {{ user.username }}</h1>
+{% endif %}
+
 <h1>Wiki Articles</h1>
-{% if user.is_authenticated %}
+
+{% if request.user.is_authenticated %}
     <h2>Your Articles</h2>
     <ul>
-        {% for article in user.profile.article.all %}
+        {% for article in authorArticles %}
             <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
         {% endfor %}
     </ul>
 {% endif %}
 
-<h2>All Articles by Category</h2>
-{% for category in object_list %}
-    <h3>{{ category.name }}</h3>
-    <ul>
-        {% for article in category.article.all %}
-            {% if not user.is_authenticated or article.author != user %}
-                <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+<h1>All Articles</h1>
+{% for article_category in object_list %}
+  <h2>{{article_category.name}}</h2>
+  <ul>
+    {% if request.user.is_authenticated %}
+      {% for article in article_category.articlecategory.all %}
+        {% if article not in authorArticles %}
+          <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {% for article in article_category.articlecategory.all %}
+        <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
+      {% endfor %}
+    {% endif %}
+  </ul>
 {% endfor %}
 
 {% endblock %}
