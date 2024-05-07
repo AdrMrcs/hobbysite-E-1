@@ -42,6 +42,9 @@ class Commission(models.Model):
 
     def get_absolute_url(self):
         return reverse("commissions:commission-detail", args=[self.pk])
+    
+    def get_update_url(self):
+        return reverse("commissions:commission-update", args=[self.pk])
 
     # @property
     # def is_open(self):

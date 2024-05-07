@@ -10,18 +10,18 @@
   <p>Created on {{ commission.created_on }}</p>
   <p>Updated on {{ commission.updated_on }}</p>
 
+  <!-- Edit button -->
+  {% if request.user.is_authenticated and request.user.profile == commission.created_by %}
+  <a href="{{ commission.get_update_url }}">Edit</a>
+  <!-- WILL EDIT ^ -->
+  {% endif %}
+
   <h2>Jobs</h2>
   <ul>
     {% for job, can_apply in jobs %}
       <li>
         <h3>{{ job }}</h3>
 
-        <!-- Edit button -->
-        {% if request.user.is_authenticated and request.user.profile == job.commission.created_by %}
-          <a href="{% url 'homepage:homepage' %}">Edit</a>
-          <!-- WILL EDIT ^ -->
-        {% endif %}
-        
         <p>Manpower required: {{ job.manpower_required }}</p>
         <p>Manpower left: {{ job.manpower_left }}</p>
       

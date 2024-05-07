@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Update Commission {% endblock %}
+{% block content %}
+<h2>Edit {{ commission }}</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ commission_form.as_p }}
+  <button name="save_commission">Save Commission Data</button>
+</form>
+<h2>{{commission}} Jobs</h2>
+<form method="post">
+  {% csrf_token %}
+  <ul>
+    {% for job, form, ind in jobs_and_forms %}
+      <li>
+        <p>{{ job }}</p>
+        {{ form.as_p }}
+      </li>
+    <button name="save_job_{{ ind }}">Save {{ job }} Data</button>
+    {% endfor %}
+  </ul>
+</form>
+
+{% endblock %}
+
+

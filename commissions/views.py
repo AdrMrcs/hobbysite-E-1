@@ -2,19 +2,18 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
 from django.views.generic import TemplateView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.forms import formset_factory
+from django.contrib.auth.mixins import LoginRequiredMixin
+import django.contrib.messages as messages
+
 
 from .models import Commission, Job, JobApplication
 from user_management.models import Profile
 from .forms import CommissionForm, JobForm, JobFormSet
 
-import logging
-import django.contrib.messages as messages
-
-# Define logger
-logger = logging.getLogger(__name__)
 
 
 class CommissionListView(ListView):
@@ -87,7 +86,7 @@ class CommissionDetailView(TemplateView):
         return ctx
 
 
-class CommissionCreateView(TemplateView):
+class CommissionCreateView(LoginRequiredMixin, TemplateView):
     template_name = "commission_create.html"
 
     def get(self, request, *args, **kwargs):
@@ -111,5 +110,49 @@ class CommissionCreateView(TemplateView):
                 job.save()
             return redirect(commission.get_absolute_url())
         
-        logger.messages("wrong input")
         return self.render_to_response(self.get_context_data())
+
+class CommissionUpdateView(LoginRequiredMixin, TemplateView):
+    template_name = "commission_update.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        commission = get_object_or_404(Commission, pk=self.kwargs['pk'])
+        ctx['commission'] = commission
+        ctx['commission_form'] = CommissionForm(instance=commission)
+        ctx['jobs_and_forms'] = [] # (job, form, index)
+        ind = 0
+        for job in Job.objects.filter(commission=commission):
+            ctx['jobs_and_forms'].append((job, JobForm(instance=job), ind))
+            ind += 1
+
+        return ctx
+    
+    def post(self, request, *args, **kwargs):
+        pk = self.kwargs['pk']
+        commission = get_object_or_404(Commission, pk=pk)
+        commission_form = CommissionForm(instance=commission, data=request.POST)
+        jobs_and_forms = []
+        ind = 0
+        for job in Job.objects.filter(commission=commission):
+            jobs_and_forms.append((job, JobForm(instance=job, data=request.POST), ind))
+            ind += 1
+
+        if "save_commission" in request.POST:
+            if person_form.is_bound and person_form.is_valid():
+                person_form.save()
+                messages.add_message(request, messages.SUCCESS, "Data saved.")
+            else:
+                messages.error(request, person_form.errors)
+        
+        # doesn't work, need formset ig
+        for job, form, ind in jobs_and_forms:
+            if f"save_job_{ind}" in request.POST:
+                if form.is_bound and form.is_valid():
+                    form.save()
+                    messages.add_message(request, messages.SUCCESS, "Data saved.")
+                else:
+                    messages.error(request, form.errors)
+
+        return self.render_to_response(self.get_context_data())
+
