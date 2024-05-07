@@ -43,21 +43,21 @@ class Commission(models.Model):
     def get_absolute_url(self):
         return reverse("commissions:commission-detail", args=[self.pk])
 
-    @property
-    def is_open(self):
-        return self.status == "OP"
+    # @property
+    # def is_open(self):
+    #     return self.status == "OP"
 
-    @property
-    def is_full(self):
-        return self.status == "FU"
+    # @property
+    # def is_full(self):
+    #     return self.status == "FU"
 
-    @property
-    def is_completed(self):
-        return self.status == "CO"
+    # @property
+    # def is_completed(self):
+    #     return self.status == "CO"
 
-    @property
-    def is_discontinued(self):
-        return self.status == "DI"
+    # @property
+    # def is_discontinued(self):
+    #     return self.status == "DI"
 
     @property
     def get_status(self):

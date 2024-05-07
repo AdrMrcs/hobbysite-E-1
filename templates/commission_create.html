@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Create Commission {% endblock %}
+{% block content %}
+<h2>Create New Commission</h2>
+<form method="POST" id="form-container">
+  {% csrf_token %}
+  {{ commission_form.as_p }}
+
+  <h2>Create Commission Jobs</h2>
+  {{ job_formset.management_form }}
+  {% for job_form in job_formset %}
+    <div class="job-form">
+      {{ job_form.as_p }}
+    </div>
+  {% endfor %}
+  <button id="add-form" type="button">Add Job</button>
+  <br>
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  let jobForm = document.querySelectorAll(".job-form")
+  let container = document.querySelector("#form-container")
+  let addButton = document.querySelector("#add-form")
+  let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+
+  let formNum = jobForm.length-1
+  addButton.addEventListener('click', addForm)
+
+  function addForm(e){
+      e.preventDefault()
+
+      let newForm = jobForm[0].cloneNode(true)
+      let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+      formNum++
+      newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
+      container.insertBefore(newForm, addButton)
+      
+      totalForms.setAttribute('value', `${formNum+1}`)
+  }
+</script>
+{% endblock %}
+
+

@@ -4,9 +4,17 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
+from django.forms import formset_factory
 
 from .models import Commission, Job, JobApplication
 from user_management.models import Profile
+from .forms import CommissionForm, JobForm, JobFormSet
+
+import logging
+import django.contrib.messages as messages
+
+# Define logger
+logger = logging.getLogger(__name__)
 
 
 class CommissionListView(ListView):
@@ -38,7 +46,7 @@ class CommissionListView(ListView):
                     tmp_rem_commissions.append(
                         (commission.get_status_sort_value(), commission)
                     )
-            tmp_rem_commissions.sort(key=lambda x: x[0])
+            tmp_rem_commissions.sort(key=lambda x: x[0]) # sort accdg. to status
             for status, commission in tmp_rem_commissions:
                 ctx["remaining_commissions"].append(commission)
 
@@ -77,3 +85,31 @@ class CommissionDetailView(TemplateView):
                 ctx["jobs"].append((job, (job.manpower_left > 0)))
 
         return ctx
+
+
+class CommissionCreateView(TemplateView):
+    template_name = "commission_create.html"
+
+    def get(self, request, *args, **kwargs):
+        commission_form = CommissionForm()
+        job_formset = JobFormSet()
+        return render(request, self.template_name, {'commission_form': commission_form, 'job_formset': job_formset})
+
+    def post(self, request, *args, **kwargs):
+        commission_form = CommissionForm(request.POST)
+        job_formset = JobFormSet(request.POST)
+
+        if job_formset.is_valid() and commission_form.is_valid():
+            commission = commission_form.save(commit=False)
+            commission.created_by = request.user.profile
+            commission.save()
+
+            for job_form in job_formset:
+                job = job_form.save(commit=False)
+                job.commission = commission
+                job.manpower_accepted = 0
+                job.save()
+            return redirect(commission.get_absolute_url())
+        
+        logger.messages("wrong input")
+        return self.render_to_response(self.get_context_data())
