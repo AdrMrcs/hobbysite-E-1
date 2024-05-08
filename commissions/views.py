@@ -161,13 +161,12 @@ class CommissionUpdateView(LoginRequiredMixin, TemplateView):
             for application in ctx["applications"]
         ]
 
+        ctx["job_formset"] = JobFormSet()
         return ctx
 
     def post(self, request, *args, **kwargs):
         ctx = self.get_context_data(**kwargs)
         pst = dict(request.POST)
-        print(request)
-        print(pst)
         pk = self.kwargs["pk"]
         commission = get_object_or_404(Commission, pk=pk)
         commission_form = CommissionForm(instance=commission, data=request.POST)
@@ -179,6 +178,16 @@ class CommissionUpdateView(LoginRequiredMixin, TemplateView):
                 messages.add_message(request, messages.SUCCESS, "Data saved.")
             else:
                 messages.error(request, commission_form.errors)
+
+        # Add additional jobs
+        job_formset = JobFormSet(request.POST)
+
+        if job_formset.is_valid():
+            for job_form in job_formset:
+                job = job_form.save(commit=False)
+                job.commission = commission
+                job.manpower_accepted = 0
+                job.save()
 
         # update jobs
         if "role" in pst and "manpower_required" in pst:
