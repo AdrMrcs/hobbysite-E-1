@@ -27,4 +27,4 @@ class TransactionForm (forms.ModelForm):
 class ProductForm (forms.ModelForm):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ['name', 'description', 'producttype', 'owner', 'price', 'stock', ]
