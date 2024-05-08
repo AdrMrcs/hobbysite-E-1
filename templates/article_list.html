@@ -6,11 +6,13 @@
 {% endblock %}
 
 {% block content %}
-  <p>Hello {{ user.username }}! </p>
+<div class="header">
   <h1>Articles</h1>
-
+  <h3>Logged in as {{ user.username }} </h3  >
+</div>
   {% if request.user.is_authenticated %}
-    <h1>My Articles</h1>
+<div class="content">
+    <h2>My Articles</h2>
       <ul>
         {% for article in ownarticles %}
           <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</li>
@@ -19,7 +21,7 @@
         <a href="{% url 'blog:article-create' %}"><button>Create Article</button></a>
   {% endif %}
 
-<h1>All Articles</h1>
+<h2>All Articles</h2>
 {% for article_category in object_list %}
   <h2>{{ article_category.name }}</h2>
   <ul>
@@ -33,5 +35,6 @@
       {% endif %}
     {% endfor %}
   </ul>
+</div>
 {% endfor %}
 {% endblock %}

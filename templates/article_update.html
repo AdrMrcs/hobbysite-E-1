@@ -4,10 +4,15 @@
 {% block title %}Update Article{% endblock title %}
 
 {% block content %}
+<div class="header">
+<h1>Edit {{article.title}}</h1>
+</div>
+<div class="content">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button>Update</button>
     </form>
   <a href="/blog/articles"><button>Back to articles</button></a>
-{% endblock %}
+</div>
+  {% endblock %}

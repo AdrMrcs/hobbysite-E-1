@@ -3,14 +3,20 @@
 
 {% block title %} Update Commission {% endblock %}
 {% block content %}
+<div class="header">
 <h1>Edit {{ commission }}</h1>
+</div>
+<div class="content">
 <form method="post">
   {% csrf_token %}
   {{ commission_form.as_p }}
   <button name="save_commission">Save Commission Data</button>
 </form>
-
+</div>
+<div class="header">
 <h2>Update Jobs</h2>
+</div>
+<div class="content">
 <form method="post">
   {% csrf_token %}
   {% for job, job_form in job_data %}
@@ -26,11 +32,15 @@
   {% endfor %}
   <button type="submit">Update jobs</button>
 </form>
+</div>
 
 <form method="post" id="form-container">
   {% csrf_token %}
 
+<div class="header">
   <h2>Add Jobs</h2>
+</div>
+<div class="content">
   {{ job_formset.management_form }}
   {% for job_form in job_formset %}
     <div class="job-form">
@@ -41,7 +51,7 @@
   <br>
   <button type="submit">Add jobs</button>
 </form>
-
+</div>
 <script>
   let jobForm = document.querySelectorAll(".job-form")
   let container = document.querySelector("#form-container")

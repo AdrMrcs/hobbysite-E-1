@@ -4,40 +4,44 @@
 {% block title %}Commission Details{% endblock %}
 {% block content %}
 
-  <h1>{{ commission.title }}</h1>
-  <p>Description: {{ commission.description }}</p>
-  <p>Status: {{ commission.get_status }}</p>
-  <p>Created on {{ commission.created_on }}</p>
-  <p>Updated on {{ commission.updated_on }}</p>
+  <div class="header">
+    <h1>Commission: {{ commission.title }}</h1>
+  </div>
+  <div class="content">
+    <p>Description: {{ commission.description }}</p>
+    <p>Status: {{ commission.get_status }}</p>
+    <p>Created on {{ commission.created_on }}</p>
+    <p>Updated on {{ commission.updated_on }}</p>
+    <!-- Edit button -->
+    {% if request.user.is_authenticated and request.user.profile == commission.created_by %}
+    <a href="{{ commission.get_update_url }}">Edit</a>
+    <!-- WILL EDIT ^ -->
+    {% endif %}
+  </div>
+  <div class="content">
+    <h1>Jobs</h1>
+    <ul>
+      {% for job, manpower_left, is_applied in jobs %}
+        <li>
+          <h2>{{ job }}</h2>
 
-  <!-- Edit button -->
-  {% if request.user.is_authenticated and request.user.profile == commission.created_by %}
-  <a href="{{ commission.get_update_url }}">Edit</a>
-  <!-- WILL EDIT ^ -->
-  {% endif %}
-
-  <h2>Jobs</h2>
-  <ul>
-    {% for job, manpower_left, is_applied in jobs %}
-      <li>
-        <h3>{{ job }}</h3>
-
-        <p>Manpower required: {{ job.manpower_required }}</p>
-        <p>Manpower left: {{ manpower_left }}</p>
-      
-        <!-- Apply button -->
-        <form method="post">
-          {% csrf_token %}
-          <input type="hidden" name="job_id" value="{{ job.pk }}">
-          {% if manpower_left > 0 and not is_applied %}
-            <button type="submit">Apply</button>
-          {% else %}
-            <button type="submit" disabled>Apply</button>
-          {% endif %}
-        </form>
-
+          <p>Manpower required: {{ job.manpower_required }}</p>
+          <p>Manpower left: {{ manpower_left }}</p>
         
-      </li>
-    {% endfor %}
-  </ul>
+          <!-- Apply button -->
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="job_id" value="{{ job.pk }}">
+            {% if manpower_left > 0 and not is_applied %}
+              <button type="submit">Apply</button>
+            {% else %}
+              <button type="submit" disabled>Apply</button>
+            {% endif %}
+          </form>
+
+          
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 {% endblock %}

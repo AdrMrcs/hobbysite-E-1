@@ -3,11 +3,15 @@
 
 {% block title %}Article Detail{% endblock %}
 {% block content %}
-
+<div class="header">
+    <h1>Create a Wiki</h1>
+</div>
+<div class="content">
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_div }}
     <button type="submit">Submit</button>
 </form>
+</div>
 
 {% endblock %}

@@ -5,12 +5,13 @@
 {% block title %}Hobbysite{% endblock %}
 {% block content %}
 
-{% if request.user.is_authenticated %}
-  <h1> hello, {{ user.username }}</h1>
-{% endif %}
-
+<div class="header">
 <h1>Wiki Articles</h1>
-
+{% if request.user.is_authenticated %}
+  <h3> Logged in as {{ user.username }}</h3>
+{% endif %}
+</div>
+<div class="content">
 {% if request.user.is_authenticated %}
   <h2>Your Articles</h2>
   <ul>
@@ -48,6 +49,7 @@
     {% endfor %}
     {% endfor %}
   </div>
+</div>
 {% endif %}
 
 {% endblock %}

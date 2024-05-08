@@ -60,3 +60,17 @@ a:hover{
     font-size: 20pt;
     color: #614a32;
 }
+nav{
+    margin: 0;
+    padding: 10pt;
+    background: #859161;
+    color: beige;
+    box-shadow: 0px 5px 50px #808080;
+}
+
+#Nav a {
+    color: beige;
+}
+#Nav a:hover {
+    color: rgb(241, 241, 137);
+}

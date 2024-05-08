@@ -4,11 +4,48 @@
 {% block title %}Commission List{% endblock %}
 {% block content %}
   
-  {% if user.is_authenticated %}
-    <h1>My Created Commissions</h1>
-  
+  <div class="header">
+    <h1>Commissions</h1>
+    {% if user.is_authenticated %}
+      <h3>Logged in as {{user.get_username}}</h3>
+    {% else %}
+      <h3>You are currently logged out</h3>
+    {% endif%}
+  </div>
+
+  <div class="content">
+    {% if user.is_authenticated %}
+      <h2>My Created Commissions</h2>
+    
+      <ul>
+        {% for status_val, commission in user_created %}
+          <li>
+            <h2><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h2>
+            <p>{{ commission.get_status }}</p>
+            <p>Created on {{ commission.created_on }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+      <a href="{% url 'commissions:commission-add' %}">Create New Commission</a>
+
+      <h2>My Applied Commissions</h2>
+      <ul>
+        {% for status_val, commission, status, job_role in user_applied %}
+          <li>
+            <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
+            <p>{{ commission.get_status }}</p>
+            <p>Created on {{ commission.created_on }}</p>
+            <p>Application status: {{ status }} </p>
+            <p>Applied role: {{ job_role }} </p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+
+    <h2>All Commissions</h2>
     <ul>
-      {% for status_val, commission in user_created %}
+      {% for commission in remaining_commissions %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
           <p>{{ commission.get_status }}</p>
@@ -16,31 +53,5 @@
         </li>
       {% endfor %}
     </ul>
-    <a href="{% url 'commissions:commission-add' %}">Create New Commission</a>
-
-    <h1>My Applied Commissions</h1>
-    <ul>
-      {% for status_val, commission, status, job_role in user_applied %}
-        <li>
-          <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
-          <p>{{ commission.get_status }}</p>
-          <p>Created on {{ commission.created_on }}</p>
-          <p>Application status: {{ status }} </p>
-          <p>Applied role: {{ job_role }} </p>
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-
-
-  <h1>All Commissions</h1>
-  <ul>
-    {% for commission in remaining_commissions %}
-      <li>
-        <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
-        <p>{{ commission.get_status }}</p>
-        <p>Created on {{ commission.created_on }}</p>
-      </li>
-    {% endfor %}
-  </ul>
+  </div>
 {% endblock %}

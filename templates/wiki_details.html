@@ -4,8 +4,11 @@
 {% block header %}wiki Articles{% endblock %}
 {% block title %}wiki Detail{% endblock %}
 {% block content %}
-<a href="{% url 'wiki:article_list' %}"><h1>Wiki List</h1></a>
-  <h2>{{article.title}}</h2>
+<div class="header">
+<h1>Wiki List</h1>
+</div>
+<div class="content">
+  <h1>{{article.title}}</h1>
 
   {% if article.headerImage %}
     <img src = "{{ article.headerImage.url }}" alt="image">
@@ -19,7 +22,7 @@
   {% endif %}
 
   {% if request.user.is_authenticated %}
-  <h3>Submit a Comment!</h3>
+  <h2>Submit a Comment!</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -52,4 +55,6 @@
   {% endfor %} 
 </ul>
 
+<a href="{% url 'wiki:article_list' %}">Back to Wiki</a>
+</div>
 {% endblock content %}

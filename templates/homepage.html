@@ -3,9 +3,12 @@
 
 {% block title %}Homepage{% endblock %}
 {% block content %}
+
+<div class="content">
     <ul>
         {% for app_link in app_links %}
-            <li><a href="{% url app_link.url %}">{{ app_link.name }}</a></li>
+            <h1><a href="{% url app_link.url %}">{{ app_link.name }}</a></h1>
         {% endfor %}
     </ul>
+</div>
 {% endblock %}
