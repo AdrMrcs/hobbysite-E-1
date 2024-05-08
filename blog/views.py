@@ -5,6 +5,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
+from django.db.models.functions import Lower
 
 from .models import Article, ArticleCategory
 from user_management import models as profilemodel
@@ -21,6 +22,10 @@ class LoginAuthenticator(object):
 class BlogListView(LoginAuthenticator, ListView):
     model = ArticleCategory
     template_name = 'article_list.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.order_by(Lower('name'))  
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

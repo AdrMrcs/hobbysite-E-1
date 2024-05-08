@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-  <p>Sup my main man {{ user.username }} </p>
+  <p>Hello {{ user.username }}! </p>
   <h1>Articles</h1>
 
   {% if request.user.is_authenticated %}
@@ -21,20 +21,17 @@
 
 <h1>All Articles</h1>
 {% for article_category in object_list %}
-  <h2>{{article_category.name}}</h2>
+  <h2>{{ article_category.name }}</h2>
   <ul>
-    {% if request.user.is_authenticated %}
-      {% for article in article_category.articles.all %}
+    {% for article in article_category.articles.all %}
+      {% if request.user.is_authenticated %}
         {% if article not in ownarticles %}
           <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
         {% endif %}
-      {% endfor %}
-    {% else %}
-      {% for article in article_category.articles.all %}
+      {% else %}
         <li><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></li>
-      {% endfor %}
-    {% endif %}
+      {% endif %}
+    {% endfor %}
   </ul>
-
 {% endfor %}
-{% endblock %}  
+{% endblock %}
