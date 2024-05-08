@@ -7,10 +7,10 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.db.models.functions import Lower
 
-from .models import Article, ArticleCategory
+
+from .models import Article, ArticleCategory, ArticleGallery
 from user_management import models as profilemodel
 from .forms import CommentForms, ArticleForms
-
 
 class LoginAuthenticator(object):
     def get_author_profile(self):
@@ -48,6 +48,7 @@ class BlogDetailView(LoginAuthenticator, DetailView):
             ctx['articlesniauthor'] = articlesniauthor
             ctx['form'] = CommentForms()
             ctx['viewer'] = author
+            ctx['images'] = ArticleGallery.objects.all()
         return ctx
     
     def post(self, request, *args, **kwargs):
