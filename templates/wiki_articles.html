@@ -44,7 +44,7 @@
     <h1>Wiki Gallery:</h1>
     {% for i in object_list %}
     {% for j in i.articlecategory.all %}
-    <img src = "{{ j.headerImage.url }}" alt="image">
+    <div style="width:15vw; display:inline-block"><a href="{{ j.get_absolute_url }}"><img src = "{{ j.headerImage.url }}" alt="image"></a><div><p>{{ j.title }}</p></div></div>
     {% endfor %}
     {% endfor %}
   </div>
