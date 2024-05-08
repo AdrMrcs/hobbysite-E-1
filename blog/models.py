@@ -62,3 +62,12 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['created_on',]
+
+class ArticleGallery(models.Model):
+    image = models.ImageField(upload_to='images/', null=False)
+    article = models.ForeignKey(
+        Article,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='images'
+        )

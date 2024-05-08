@@ -12,6 +12,7 @@
   {% else %}
     <p>Image not available.</p>
   {% endif %}
+
   <p>{{article.entry}}</p>
   {% if request.user.is_authenticated %}
   <h3>Submit a Comment!</h3>
@@ -50,5 +51,12 @@
     {% endif %}
   {% endfor %} 
 </ul>
+
+<br><h3>Gallery:</h3>
+<div>
+    {% for image in images %}
+        <img src="{{ image.image.url }}" height= "200px"  alt="Image">
+    {% endfor %}
+</div>
 
 {% endblock content %}
