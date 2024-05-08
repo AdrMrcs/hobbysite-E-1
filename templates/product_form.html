@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="{% static 'css/merchstore.css' %}">
     <div class="header">
         <h1>Merchandise Store</h1>
-        {% if user.is_authenticated %}
-            <h3>Logged in as {{user.get_username}}</h3>
-        {% else %}
-            <h3>You are currently logged out</h3>
-        {% endif%}
+        <h3>Logged in as {{user.get_username}}| 
+        <a href="{% url 'merchstore:cart-view' %}" style="color: beige;">View Cart</a> | 
+        <a href="{% url 'merchstore:transaction-view' %}" style="color: beige;">View Transactions</a></h3>
     </div>
     <div class="forms">
         <form method="POST">

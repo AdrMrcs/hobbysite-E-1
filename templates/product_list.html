@@ -7,7 +7,9 @@
     <div class="header">
         <h1>Merchandise Store</h1>
         {% if user.is_authenticated %}
-          <h3>Logged in as {{user.get_username}}</h3>
+          <h3>Logged in as {{user.get_username}}| 
+          <a href="{% url 'merchstore:cart-view' %}" style="color: beige;">View Cart</a> | 
+          <a href="{% url 'merchstore:transaction-view' %}" style="color: beige;">View Transactions</a></h3>
         {% else %}
           <h3>You are currently logged out</h3>
         {% endif%}
@@ -16,7 +18,7 @@
     <div class="content">
         <h2>Products</h2>
         {% if user.is_authenticated%}
-            <h3>Your Products</h3>
+            <h3 class="productname">Your Products</h3>
             <ul>
                 {% for product in object_list %}
                     {% if product.owner.name == user.get_username %}
@@ -31,7 +33,7 @@
                     {% endif %}
                 {% endfor %}
             </ul>
-            <h3>All Products</h3>
+            <h3 class="productname">All Products</h3>
             <ul>
                 {% for product in object_list %}
                     {% if product.owner.name != user.get_username %}
@@ -63,7 +65,7 @@
             </ul>
         {% endif %}
 
-        <a href="item/add">Add a Product</a>
+        <h3><a href="item/add">Add a Product</a></h3>
     </div>
 
 {% endblock %}
