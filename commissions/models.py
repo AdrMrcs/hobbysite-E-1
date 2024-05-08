@@ -42,25 +42,9 @@ class Commission(models.Model):
 
     def get_absolute_url(self):
         return reverse("commissions:commission-detail", args=[self.pk])
-    
+
     def get_update_url(self):
         return reverse("commissions:commission-update", args=[self.pk])
-
-    # @property
-    # def is_open(self):
-    #     return self.status == "OP"
-
-    # @property
-    # def is_full(self):
-    #     return self.status == "FU"
-
-    # @property
-    # def is_completed(self):
-    #     return self.status == "CO"
-
-    # @property
-    # def is_discontinued(self):
-    #     return self.status == "DI"
 
     @property
     def get_status(self):
@@ -107,6 +91,8 @@ class Job(models.Model):
     @property
     def manpower_increment(self):
         self.manpower_accepted += 1
+        if self.manpower_left <= 0:
+            self.commission.status = "FU"
 
     @property
     def manpower_decrement(self):

@@ -3,24 +3,28 @@
 
 {% block title %} Update Commission {% endblock %}
 {% block content %}
-<h2>Edit {{ commission }}</h2>
+<h1>Edit {{ commission }}</h1>
 <form method="post">
   {% csrf_token %}
   {{ commission_form.as_p }}
   <button name="save_commission">Save Commission Data</button>
 </form>
-<h2>{{commission}} Jobs</h2>
+
+<h2>Update Jobs</h2>
 <form method="post">
   {% csrf_token %}
-  <ul>
-    {% for job, form, ind in jobs_and_forms %}
-      <li>
-        <p>{{ job }}</p>
-        {{ form.as_p }}
-      </li>
-    <button name="save_job_{{ ind }}">Save {{ job }} Data</button>
-    {% endfor %}
-  </ul>
+  {% for job, job_form in job_data %}
+    {{ job_form.as_p }} 
+    <ul>
+      {% for application, application_form in application_data %}
+        {% if application.job == job %}
+          <li>Applicant: {{ application.applicant.name }}</li>
+          <p>{{ application_form.as_p }}</p>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endfor %}
+  <button type="submit">Update</button>
 </form>
 
 {% endblock %}

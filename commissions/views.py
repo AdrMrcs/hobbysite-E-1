@@ -5,15 +5,14 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic import TemplateView
 from django.shortcuts import redirect, get_object_or_404
-from django.forms import formset_factory
+from django.forms import inlineformset_factory
 from django.contrib.auth.mixins import LoginRequiredMixin
 import django.contrib.messages as messages
 
 
 from .models import Commission, Job, JobApplication
 from user_management.models import Profile
-from .forms import CommissionForm, JobForm, JobFormSet
-
+from .forms import CommissionForm, JobForm, JobFormSet, JobApplicationForm
 
 
 class CommissionListView(ListView):
@@ -45,7 +44,7 @@ class CommissionListView(ListView):
                     tmp_rem_commissions.append(
                         (commission.get_status_sort_value(), commission)
                     )
-            tmp_rem_commissions.sort(key=lambda x: x[0]) # sort accdg. to status
+            tmp_rem_commissions.sort(key=lambda x: x[0])  # sort accdg. to status
             for status, commission in tmp_rem_commissions:
                 ctx["remaining_commissions"].append(commission)
 
@@ -92,7 +91,11 @@ class CommissionCreateView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         commission_form = CommissionForm()
         job_formset = JobFormSet()
-        return render(request, self.template_name, {'commission_form': commission_form, 'job_formset': job_formset})
+        return render(
+            request,
+            self.template_name,
+            {"commission_form": commission_form, "job_formset": job_formset},
+        )
 
     def post(self, request, *args, **kwargs):
         commission_form = CommissionForm(request.POST)
@@ -109,50 +112,88 @@ class CommissionCreateView(LoginRequiredMixin, TemplateView):
                 job.manpower_accepted = 0
                 job.save()
             return redirect(commission.get_absolute_url())
-        
+
         return self.render_to_response(self.get_context_data())
+
 
 class CommissionUpdateView(LoginRequiredMixin, TemplateView):
     template_name = "commission_update.html"
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        commission = get_object_or_404(Commission, pk=self.kwargs['pk'])
-        ctx['commission'] = commission
-        ctx['commission_form'] = CommissionForm(instance=commission)
-        ctx['jobs_and_forms'] = [] # (job, form, index)
-        ind = 0
-        for job in Job.objects.filter(commission=commission):
-            ctx['jobs_and_forms'].append((job, JobForm(instance=job), ind))
-            ind += 1
+        commission = get_object_or_404(Commission, pk=self.kwargs["pk"])
+        ctx["commission"] = commission
+        ctx["commission_form"] = CommissionForm(instance=commission)
+
+        ctx["jobs"] = Job.objects.filter(commission=commission)
+        ctx["applications"] = JobApplication.objects.all()
+
+        ctx["job_data"] = [(job, JobForm(instance=job)) for job in ctx["jobs"]]
+        ctx["application_data"] = [
+            (application, JobApplicationForm(instance=application))
+            for application in ctx["applications"]
+        ]
 
         return ctx
-    
+
     def post(self, request, *args, **kwargs):
-        pk = self.kwargs['pk']
+        ctx = self.get_context_data(**kwargs)
+        pst = dict(request.POST)
+        print(request)
+        print(pst)
+        pk = self.kwargs["pk"]
         commission = get_object_or_404(Commission, pk=pk)
         commission_form = CommissionForm(instance=commission, data=request.POST)
-        jobs_and_forms = []
-        ind = 0
-        for job in Job.objects.filter(commission=commission):
-            jobs_and_forms.append((job, JobForm(instance=job, data=request.POST), ind))
-            ind += 1
 
+        # update commission info
         if "save_commission" in request.POST:
-            if person_form.is_bound and person_form.is_valid():
-                person_form.save()
+            if commission_form.is_bound and commission_form.is_valid():
+                commission_form.save()
                 messages.add_message(request, messages.SUCCESS, "Data saved.")
             else:
-                messages.error(request, person_form.errors)
-        
-        # doesn't work, need formset ig
-        for job, form, ind in jobs_and_forms:
-            if f"save_job_{ind}" in request.POST:
-                if form.is_bound and form.is_valid():
-                    form.save()
-                    messages.add_message(request, messages.SUCCESS, "Data saved.")
-                else:
-                    messages.error(request, form.errors)
+                messages.error(request, commission_form.errors)
+
+        # update jobs
+        if "role" in pst and "manpower_required" in pst:
+            for i in range(len(ctx["jobs"])):
+                job = ctx["jobs"][i]
+                if pst["role"][i] == "" or not pst["manpower_required"][i].isdigit():
+                    continue
+                job.role = pst["role"][i]
+                job.manpower_required = pst["manpower_required"][i]
+                job.save()
+
+        # update applicants
+        if "status" in pst:
+            i = 0
+            for applicant in ctx["applications"]:
+                if applicant.job not in ctx["jobs"]:
+                    continue
+
+                applicant.status = pst["status"][i]
+                applicant.save()
+
+                i += 1
+
+        # update job status if all applicants are accepted
+        for job in ctx["jobs"]:
+            job_is_full = True
+            for applicant in JobApplication.objects.filter(job=job):
+                if applicant.get_status != "Accepted":
+                    job_is_full = False
+                    break
+
+            job.status = "2" if job_is_full else "1"
+            job.save()
+
+        # update commission status if all jobs are full
+        commission_is_full = True
+        for job in ctx["jobs"]:
+            if job.get_status != "Full":
+                commission_is_full = False
+                break
+
+        commission.status = "FU"
+        commission.save()
 
         return self.render_to_response(self.get_context_data())
-
