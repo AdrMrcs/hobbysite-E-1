@@ -6,22 +6,27 @@
 
     <div class="header">
         <h1>Merchandise Store</h1>
-        <h3>Logged in as {{user.get_username}}</h3>
+        <h3>Logged in as {{user.get_username}} | 
+        <a href="{% url 'merchstore:cart-view' %}" style="color: beige;">View Cart</a> | 
+        <a href="{% url 'merchstore:transaction-view' %}" style="color: beige;">View Transactions</a></h3>
     </div>
 
     <div class="content">
-        {% for transaction in object_list %}
-        <ul>
-            {% if transaction.buyer.name == user.get_username %}
-                <li class="productname">{{transaction.product.name}}</li>
-                <ul>
-                    <li>Owner: {{transaction.product.owner.name}}</li>
-                    <li>Amount: {{transaction.amount}}</li>
-                    <li>Date: {{transaction.created_on}}</li>
-                    <li>Status: {{transaction.status}}</li>
-                </ul>
+        {% for profile in profiles %}
+            {% if not profile.name == user.get_username %}
+                <li>Owner: <span class="productname">{{profile.name}}</span></li>
+                {% for transaction in object_list %}
+                    {% if profile.name == transaction.product.owner.name %}
+                        <ul>
+                            <ul>
+                                <li>Product: <span class="productname">{{transaction.product.name}}</span></li>
+                                <li>Amount: {{transaction.amount}}</li>
+                                <li>Date: {{transaction.created_on}}</li>
+                            </ul>
+                        </ul>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
-        </ul>
         {% endfor %}
     </div>
     <h3><a href="/merchstore/items">Go back to product list</a></h3>
