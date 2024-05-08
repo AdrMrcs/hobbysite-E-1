@@ -18,18 +18,18 @@
 
   <h2>Jobs</h2>
   <ul>
-    {% for job, can_apply in jobs %}
+    {% for job, manpower_left, is_applied in jobs %}
       <li>
         <h3>{{ job }}</h3>
 
         <p>Manpower required: {{ job.manpower_required }}</p>
-        <p>Manpower left: {{ job.manpower_left }}</p>
+        <p>Manpower left: {{ manpower_left }}</p>
       
         <!-- Apply button -->
         <form method="post">
           {% csrf_token %}
           <input type="hidden" name="job_id" value="{{ job.pk }}">
-          {% if can_apply %}
+          {% if manpower_left > 0 and not is_applied %}
             <button type="submit">Apply</button>
           {% else %}
             <button type="submit" disabled>Apply</button>

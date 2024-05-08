@@ -23,7 +23,16 @@ class CommissionListView(ListView):
         user = self.request.user
         ctx = super().get_context_data(**kwargs)
         if user.is_authenticated:
-            ctx["user_created"] = Commission.objects.filter(created_by=user.profile)
+            ctx["user_created"] = []
+            ctx["user_created_wo_status"] = []
+
+            for commission in Commission.objects.filter(created_by=user.profile):
+                ctx["user_created_wo_status"].append(commission)
+                ctx["user_created"].append(
+                    (commission.get_status_sort_value(), commission)
+                )
+
+            ctx["user_created"].sort(key=lambda x: x[0])
 
             ctx["user_applied"] = []
             ctx["user_applied_wo_status"] = []
@@ -31,14 +40,23 @@ class CommissionListView(ListView):
                 for job in commission.jobs.all():
                     for job_app in job.job_apps.all():
                         if job_app.applicant == user.profile:
-                            ctx["user_applied"].append((commission, job_app.get_status))
+                            ctx["user_applied"].append(
+                                (
+                                    commission.get_status_sort_value(),
+                                    commission,
+                                    job_app.get_status,
+                                    job.role,
+                                )
+                            )
                             ctx["user_applied_wo_status"].append(commission)
+
+            ctx["user_applied"].sort(key=lambda x: x[0])
 
             ctx["remaining_commissions"] = []
             tmp_rem_commissions = []  # (status, commission) -> sorted
             for commission in Commission.objects.all():
                 if (
-                    commission not in ctx["user_created"]
+                    commission not in ctx["user_created_wo_status"]
                     and commission not in ctx["user_applied_wo_status"]
                 ):
                     tmp_rem_commissions.append(
@@ -80,7 +98,16 @@ class CommissionDetailView(TemplateView):
             ctx["jobs"] = []
 
             for job in Job.objects.filter(commission=ctx["commission"]):
-                ctx["jobs"].append((job, (job.manpower_left > 0)))
+                accepted_apps = 0
+                is_applied = False
+                for applicant in JobApplication.objects.filter(job=job):
+                    if applicant.get_status == "Accepted":
+                        accepted_apps += 1
+                    if applicant.applicant == user.profile:
+                        is_applied = True
+                ctx["jobs"].append(
+                    (job, (job.manpower_required - accepted_apps), is_applied)
+                )
 
         return ctx
 

@@ -8,7 +8,7 @@
     <h1>My Created Commissions</h1>
   
     <ul>
-      {% for commission in user_created %}
+      {% for status_val, commission in user_created %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
           <p>{{ commission.get_status }}</p>
@@ -20,12 +20,13 @@
 
     <h1>My Applied Commissions</h1>
     <ul>
-      {% for commission, status in user_applied %}
+      {% for status_val, commission, status, job_role in user_applied %}
         <li>
           <h3><a href="{{ commission.get_absolute_url }}">{{ commission.title }}</a></h3>
           <p>{{ commission.get_status }}</p>
           <p>Created on {{ commission.created_on }}</p>
           <p>Application status: {{ status }} </p>
+          <p>Applied role: {{ job_role }} </p>
         </li>
       {% endfor %}
     </ul>
